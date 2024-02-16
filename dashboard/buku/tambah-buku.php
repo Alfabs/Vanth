@@ -24,31 +24,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stok = htmlspecialchars($_POST["stok"]);
 
     // Lakukan validasi dan penambahan buku
-    if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_terbit) && !empty($kategori_id)) {
-        // Query untuk menambahkan buku ke dalam database
+if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_terbit) && !empty($kategori_id)) {
+    // Query untuk memeriksa apakah buku sudah ada
+    $check_book_query = "SELECT * FROM `buku` WHERE `judul` = '$judul' AND `penulis` = '$penulis' AND `penerbit` = '$penerbit' AND `tahun_terbit` = '$tahun_terbit' AND `kategori_id` = '$kategori_id'";
+    $result_check_book = mysqli_query($conn, $check_book_query);
+    
+    if (mysqli_num_rows($result_check_book) > 0) {
+        // Buku sudah ada, tampilkan pesan error
+        $error_message = "Buku ini sudah ada.";
+    } else {
+        // Buku belum ada, lanjutkan dengan penambahan buku
         $perpus_id = 0; 
         $cover = $_FILES['cover'];
         $cover_path = 'cover/';
 
         if (move_uploaded_file($cover['tmp_name'], $cover_path . $cover['name'])) {
-        // File cover berhasil diunggah, simpan data buku ke database
-        $cover_filename = $cover['name'];
+            // File cover berhasil diunggah, simpan data buku ke database
+            $cover_filename = $cover['name'];
 
-        $add_book_query = "INSERT INTO `buku` (`perpus_id`, `judul`, `penulis`, `penerbit`, `tahun_terbit`, `kategori_id`, `cover`, `stok`, `created_at`)
-                           VALUES ('$perpus_id', '$judul', '$penulis', '$penerbit', '$tahun_terbit', '$kategori_id', '$cover_filename', '$stok', current_timestamp())";
+            $add_book_query = "INSERT INTO `buku` (`perpus_id`, `judul`, `penulis`, `penerbit`, `tahun_terbit`, `kategori_id`, `cover`, `stok`, `created_at`)
+                               VALUES ('$perpus_id', '$judul', '$penulis', '$penerbit', '$tahun_terbit', '$kategori_id', '$cover_filename', '$stok', current_timestamp())";
 
-        // Eksekusi query dan tampilkan pesan sukses atau error
-        if (mysqli_query($conn, $add_book_query)) {
-            $success_message = "Buku berhasil ditambahkan.";
+            // Eksekusi query dan tampilkan pesan sukses atau error
+            if (mysqli_query($conn, $add_book_query)) {
+                $success_message = "Buku berhasil ditambahkan.";
+            } else {
+                $error_message = "Error: " . mysqli_error($conn);
+            }
         } else {
-            $error_message = "Error: " . mysqli_error($conn);
+            $error_message = "Error uploading cover file.";
         }
-    } else {
-        $error_message = "Error uploading cover file.";
     }
 } else {
     $error_message = "Semua kolom harus diisi.";
 }
+
 }
 
 // Query untuk mengambil data kategori buku dari database
