@@ -228,7 +228,7 @@ $total_pages = ceil($total_peminjaman / $limit);
             <!-- Main Content -->
             <div id="content">
 
-             <!-- Topbar -->
+            <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
@@ -236,70 +236,26 @@ $total_pages = ceil($total_peminjaman / $limit);
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" id="searchInput" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input id="searchInput" type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-                        
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION['username'];?></span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <?= $_SESSION['username']; ?>
+                                </span>
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -309,85 +265,32 @@ $total_pages = ceil($total_peminjaman / $limit);
                 <!-- End of Topbar -->
 
               <div class="container-fluid">
-                <h1 class="h3 mb-3 text-gray-800">Peminjaman</h1>
+                <h1 class="h3 mb-3 text-gray-800">Generate Laporan Peminjaman</h1>
                 <!-- Form untuk filter tanggal -->
-                
+                <form action="generate-excel.php" method="post" class="form-row align-items-end">
+                    <div class="form-group col-lg-3 mb-3">
+                        <label for="filterDate">Filter Berdasarkan Tanggal Awal:</label>
+                        <input type="date" class="form-control" id="filterDate" name="filter_date">
+                    </div>
+                    <div class="form-group col-lg-3 mb-3">
+                        <label for="filterEndDate">Filter Berdasarkan Tanggal Akhir:</label>
+                        <input type="date" class="form-control" id="filterEndDate" name="filter_end_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="kategori_id">Filter Berdasarkan Status</label>
+                        <select class="form-control" id="kategori_id" name="status_peminjaman">
+                            <option value=""></option>
+                            <option value="dipinjam">Dipinjam</option>
+                            <option value="dikembalikan">Dikembalikan</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-2 mb-3">
+                        <button type="submit" class="btn btn-primary btn-block" name="generate_excel">Generate Excel</button>
+                    </div>
+                </form>
 
 
 
-                <div class="row">
-                    <div class="col-lg-12">
-                        <table id="peminjamanTable" class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Cover</th>
-                                    <th>Nama Buku</th>
-                                    <th>Nama Peminjam</th>
-                                    <th>Tanggal Peminjaman</th>
-                                    <th>Tanggal Pengembalian</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <tr>
-                                        <td><?= $row['id']; ?></td>
-                                        <td><img src="../buku/cover/<?= $row['cover']; ?>" alt="Cover" style="max-width: 100px; max-height: 100px;"></td>
-                                        <td><?= $row['judul_buku']; ?></td>
-                                        <td><?= $row['nama_peminjam']; ?></td>
-                                        <td><?= $row['tanggal_peminjaman']; ?></td>
-                                        <td><?= $row['tanggal_pengembalian']; ?></td>
-                                        <td>
-                                            <?php if ($row['status_peminjaman'] == 'Dikembalikan') : ?>
-                                                <?= $row['status_peminjaman']; ?>
-                                            <?php else : ?>
-                                                Belum Dikembalikan
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <a target="_blank" href="generate-peminjaman.php?id=<?= $row['id']; ?>" class="btn btn-success">Generate PDF</a>
-                                        </td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
-
-                        <!-- Pagination -->
-                        <nav aria-label="Page navigation example">
-                            <ul class="justify-content-center pagination">
-                                <!-- Previous Page Button -->
-                                <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
-                                    <a class="page-link" href="?page=<?= ($page <= 1) ? 1 : ($page - 1); ?>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-
-                                <!-- Page Buttons -->
-                                <?php
-                                $start_page = max(1, $page - 2);
-                                $end_page = min($total_pages, $page + 2);
-
-                                for ($i = $start_page; $i <= $end_page; $i++) :
-                                ?>
-                                    <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                                        <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
-                                    </li>
-                                <?php endfor; ?>
-
-                                <!-- Next Page Button -->
-                                <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
-                                    <a class="page-link" href="?page=<?= ($page >= $total_pages) ? $total_pages : ($page + 1); ?>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <!-- End Pagination -->
-
-    </div>
-</div>
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -447,19 +350,6 @@ $total_pages = ceil($total_peminjaman / $limit);
     <!-- Page level custom scripts -->
     <script src="../js/demo/chart-area-demo.js"></script>
     <script src="../js/demo/chart-pie-demo.js"></script>
-    <script>
-    function searchWithPagination(page) {
-        var keyword = $('#searchInput').val();
-        $.ajax({
-            url: 'search.php',
-            method: 'POST',
-            data: {keyword: keyword, page: page},
-            success: function(data){
-                $('#peminjamanTable').html(data);
-            }
-        });
-    }
-    </script>
 
 
 </script>

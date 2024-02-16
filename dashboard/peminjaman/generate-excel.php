@@ -17,6 +17,7 @@ dataBuku($userRole);
 // Ambil data dari form filter tanggal
 $filter_date = isset($_POST['filter_date']) ? $_POST['filter_date'] : '';
 $filter_end_date = isset($_POST['filter_end_date']) ? $_POST['filter_end_date'] : '';
+$filter_status = isset($_POST['status_peminjaman']) ? $_POST['status_peminjaman'] : '';
 
 // Tentukan kolom untuk filter berdasarkan tanggal
 $filter_column = '';
@@ -30,6 +31,12 @@ if (!empty($filter_date) && !empty($filter_end_date)) {
     $filter_column = "tanggal_pengembalian = '$filter_end_date'";
 }
 
+// Menentukan filter berdasarkan status peminjaman
+$status_filter = '';
+if (!empty($filter_status)) {
+    $status_filter = " AND status_peminjaman = '$filter_status'";
+}
+
 // Query to fetch peminjaman data joined with buku and user data
 $query = "SELECT p.*, b.judul AS judul_buku, u.nama_lengkap AS nama_peminjam, b.cover 
           FROM peminjaman p
@@ -40,6 +47,9 @@ $query = "SELECT p.*, b.judul AS judul_buku, u.nama_lengkap AS nama_peminjam, b.
 if (!empty($filter_column)) {
     $query .= " WHERE $filter_column";
 }
+
+// Menambahkan filter berdasarkan status peminjaman
+$query .= $status_filter;
 
 $result = mysqli_query($conn, $query);
 
