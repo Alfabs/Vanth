@@ -1,0 +1,55 @@
+<?php
+session_start();
+
+include '../config.php';
+include '../function/func.php';
+
+if (!isset($_SESSION['username'])) {
+    header("Location: ../login.php"); 
+    exit();
+}
+
+$username = $_SESSION['username'];
+$userRole = getUserRole($conn, $username);
+checkUserRole($userRole);
+
+$userId = getLoggedInUserID($conn, $username);
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
+    $bookId = $_GET['id'];
+    $userId = $userId;
+
+    // Periksa apakah buku sudah dipinjam sebelumnya
+    $checkPeminjamanQuery = "SELECT * FROM peminjaman WHERE user = $userId AND buku = $bookId AND status_peminjaman = 'Dipinjam'";
+    $checkPeminjamanResult = mysqli_query($conn, $checkPeminjamanQuery);
+
+    if (mysqli_num_rows($checkPeminjamanResult) > 0) {
+        // Jika buku sudah dipinjam, tambahkan tanggal_pengembalian hari ini
+        $tanggalPengembalian = date('Y-m-d');
+
+        // Perbarui status peminjaman menjadi 'Dikembalikan' dan tambahkan tanggal pengembalian
+        $updatePeminjamanQuery = "UPDATE peminjaman SET tanggal_pengembalian = '$tanggalPengembalian', status_peminjaman = 'Dikembalikan' WHERE user = $userId AND buku = $bookId AND status_peminjaman = 'Dipinjam'";
+        
+        if (mysqli_query($conn, $updatePeminjamanQuery)) {
+            // Setelah pengembalian berhasil, tambahkan stok buku dengan satu
+            $updateStokQuery = "UPDATE buku SET stok = stok + 1 WHERE id = $bookId";
+            mysqli_query($conn, $updateStokQuery);
+
+            // Pengembalian berhasil, alihkan kembali pengguna ke halaman utama atau berikan pesan konfirmasi
+            header("Location: index.php");
+            exit();
+        } else {
+            // Jika terjadi kesalahan saat melakukan pengembalian, berikan pesan kesalahan atau tangani sesuai kebutuhan
+            echo "Error: " . $updatePeminjamanQuery . "<br>" . mysqli_error($conn);
+        }
+    } else {
+        // Jika buku belum dipinjam, berikan pesan kepada pengguna atau tangani sesuai kebutuhan
+        echo "Buku belum dipinjam.";
+        exit();
+    }
+} else {
+    // Jika tidak ada parameter ID buku yang diberikan, alihkan pengguna kembali ke halaman utama atau berikan pesan kesalahan
+    header("Location: index.php");
+    exit();
+}
+?>
