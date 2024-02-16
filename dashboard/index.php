@@ -78,22 +78,17 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 3;
 $offset = ($page - 1) * $limit;
 
-// Query to fetch peminjaman data joined with buku and user data
-$query = "SELECT p.*, b.judul AS judul_buku, u.nama_lengkap AS nama_peminjam, b.cover 
-          FROM peminjaman p
-          JOIN buku b ON p.buku = b.id
-          JOIN user u ON p.user = u.id
-          LIMIT $limit OFFSET $offset";
+$query = "SELECT * FROM buku LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $query);
 
-// Total number of peminjaman
-$total_peminjaman_query = "SELECT COUNT(*) as total FROM peminjaman";
-$total_peminjaman_result = mysqli_query($conn, $total_peminjaman_query);
-$total_peminjaman_row = mysqli_fetch_assoc($total_peminjaman_result);
-$total_peminjaman = $total_peminjaman_row['total'];
+// Total number of books
+$total_books_query = "SELECT COUNT(*) as total FROM buku";
+$total_books_result = mysqli_query($conn, $total_books_query);
+$total_books_row = mysqli_fetch_assoc($total_books_result);
+$total_books = $total_books_row['total'];
 
 // Total pages
-$total_pages = ceil($total_peminjaman / $limit);
+$total_pages = ceil($total_books / $limit);
 
 ?>
 
@@ -408,78 +403,71 @@ $total_pages = ceil($total_peminjaman / $limit);
                             </div>
                         </div>
                     </div>
-<!-- Content Row -->
                 <div class="row">
-                    <h1 class="h3 mb-3 text-gray-800">Peminjaman</h1>
-                    <div class="col-lg-12">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Cover</th>
-                                    <th>Nama Buku</th>
-                                    <th>Nama Peminjam</th>
-                                    <th>Tanggal Peminjaman</th>
-                                    <th>Tanggal Pengembalian</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <tr>
-                                        <td><?= $row['id']; ?></td>
-                                        <td><img src="buku/cover/<?= $row['cover']; ?>" alt="Cover" style="max-width: 100px; max-height: 100px;"></td>
-                                        <td><?= $row['judul_buku']; ?></td>
-                                        <td><?= $row['nama_peminjam']; ?></td>
-                                        <td><?= $row['tanggal_peminjaman']; ?></td>
-                                        <td><?= $row['tanggal_pengembalian']; ?></td>
-                                        <td>
-                                            <?php if ($row['status_peminjaman'] == 'Dikembalikan') : ?>
-                                                <?= $row['status_peminjaman']; ?>
-                                            <?php else : ?>
-                                                Belum Dikembalikan
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <a target="_blank" href="peminjaman/generate-peminjaman.php?id=<?= $row['id']; ?>" class="btn btn-success">Generate PDF</a>
-                                        </td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
+                    <!-- Page Heading -->
+                    <h1 class="h3 ml-3 mb-3 text-gray-800">Buku</h1>
+    <div class="col-lg-12 mx-auto">
+        <table class="table table-hover ">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Cover</th>
+                    <th scope="col">Judul</th>
+                    <th scope="col">Pengarang</th>
+                    <th scope="col">Tahun Terbit</th>
+                    <th scope="col">Stok</th>
+                    <!-- Tambahkan kolom sesuai dengan struktur tabel buku -->
+                    <th style="text-align: center;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = mysqli_fetch_assoc($result)) :?>
+                    <tr>
+                        <td><?=$row['id'];?></td>
+                        <td><img src="buku/cover/<?=$row['cover'];?>" alt="Cover" style="max-width: 100px; max-height: 100px;"></td>
+                        <td><?=$row['judul'];?></td>
+                        <td><?=$row['penulis'];?></td>
+                        <td><?=$row['tahun_terbit'];?></td>
+                        <td><?=$row['stok'];?></td>
+                        <td class="text-center">
+                            <a class="badge badge-danger" onclick="return confirm('Yakin Mau Hapus buku?')" href="buku/delete.php?id=<?=$row['id'];?>">Delete</a>
+                            <a class="badge badge-success" href="buku/edit.php?id=<?=$row['id'];?>">Edit</a>
+                        </td>
+                    </tr>
+                <?php endwhile;?>
+            </tbody>
+        </table>
+       <!-- Pagination -->
+<nav aria-label="Page navigation example">
+    <ul class="justify-content-center pagination">
+        <!-- Previous Page Button -->
+        <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
+            <a class="page-link" href="?page=<?= ($page <= 1) ? 1 : ($page - 1); ?>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
 
-                        <!-- Pagination -->
-                        <nav aria-label="Page navigation example">
-                            <ul class="justify-content-center pagination">
-                                <!-- Previous Page Button -->
-                                <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
-                                    <a class="page-link" href="?page=<?= ($page <= 1) ? 1 : ($page - 1); ?>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
+        <!-- Page Buttons -->
+        <?php
+        $start_page = max(1, $page - 2);
+        $end_page = min($total_pages, $page + 2);
 
-                                <!-- Page Buttons -->
-                                <?php
-                                $start_page = max(1, $page - 2);
-                                $end_page = min($total_pages, $page + 2);
+        for ($i = $start_page; $i <= $end_page; $i++) :
+        ?>
+            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+            </li>
+        <?php endfor; ?>
 
-                                for ($i = $start_page; $i <= $end_page; $i++) :
-                                ?>
-                                    <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                                        <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
-                                    </li>
-                                <?php endfor; ?>
-
-                                <!-- Next Page Button -->
-                                <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
-                                    <a class="page-link" href="?page=<?= ($page >= $total_pages) ? $total_pages : ($page + 1); ?>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <!-- End Pagination -->
+        <!-- Next Page Button -->
+        <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
+            <a class="page-link" href="?page=<?= ($page >= $total_pages) ? $total_pages : ($page + 1); ?>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- End Pagination -->
 
 
                     
