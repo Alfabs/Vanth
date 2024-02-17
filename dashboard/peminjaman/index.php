@@ -15,6 +15,10 @@ $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
 dataBuku($userRole);
 
+// Inisialisasi variabel filter dari URL
+$status = isset($_GET['status']) ? $_GET['status'] : '';
+$startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$endDate = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
 // Pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -26,17 +30,32 @@ $query = "SELECT p.*, b.judul AS judul_buku, u.nama_lengkap AS nama_peminjam, b.
           FROM peminjaman p
           JOIN buku b ON p.buku = b.id
           JOIN user u ON p.user = u.id
-          LIMIT $limit OFFSET $offset";
+          WHERE 1 ";
+
+// Menambahkan filter ke query jika ada
+if (!empty($status)) {
+    $query .= "AND status_peminjaman = '$status' ";
+}
+
+if (!empty($startDate) && !empty($endDate)) {
+    $query .= "AND tanggal_peminjaman BETWEEN '$startDate' AND '$endDate' ";
+}
+
+
+// Query untuk menghitung total jumlah hasil setelah diterapkan filter
+$countQuery = "SELECT COUNT(*) as total FROM ($query) AS subquery";
+$countResult = mysqli_query($conn, $countQuery);
+$countRow = mysqli_fetch_assoc($countResult);
+$totalResults = $countRow['total'];
+
+// Tambahkan LIMIT dan OFFSET untuk pagination
+$query .= "LIMIT $limit OFFSET $offset";
+
+// Lakukan query SQL
 $result = mysqli_query($conn, $query);
 
-// Total number of peminjaman
-$total_peminjaman_query = "SELECT COUNT(*) as total FROM peminjaman";
-$total_peminjaman_result = mysqli_query($conn, $total_peminjaman_query);
-$total_peminjaman_row = mysqli_fetch_assoc($total_peminjaman_result);
-$total_peminjaman = $total_peminjaman_row['total'];
-
 // Total pages
-$total_pages = ceil($total_peminjaman / $limit);
+$totalPages = ceil($totalResults / $limit);
 ?>
 
 <!DOCTYPE html>
@@ -109,9 +128,23 @@ $total_pages = ceil($total_peminjaman / $limit);
 
             <!-- Nav Item - Peminjaman -->
             <li class="nav-item active">
-                <a class="nav-link" href="peminjaman/">
+                <a class="nav-link" href="">
                     <i class="fas fa-fw fa-handshake"></i>
                     <span>Peminjaman</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="laporan.php">
+                    <i class="fas fa-print"></i>
+                    <span>Laporan</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </li>
 
@@ -167,6 +200,13 @@ $total_pages = ceil($total_peminjaman / $limit);
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="laporan.php">
+                    <i class="fas fa-print"></i>
+                    <span>Laporan</span>
+                </a>
+            </li>
+
 
 
             <!-- Divider -->
@@ -207,6 +247,13 @@ $total_pages = ceil($total_peminjaman / $limit);
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -237,18 +284,7 @@ $total_pages = ceil($total_peminjaman / $limit);
                     </button>
 
                     <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" id="searchInput" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -317,6 +353,31 @@ $total_pages = ceil($total_peminjaman / $limit);
 
                 <div class="row">
                     <div class="col-lg-12">
+                        <!-- Filter Form -->
+                    <form method="GET" class="form-row align-items-end" action="">
+
+                            <div class="form-group col-lg-3 mb-3">
+                                <label for="">Pilih Status</label>
+                                <select class="form-control" name="status">
+                                    <option value=""></option>
+                                    <option value="Dipinjam" <?php if ($status == 'Dipinjam') echo 'selected'; ?>>Dipinjam</option>
+                                    <option value="Dikembalikan" <?php if ($status == 'Dikembalikan') echo 'selected'; ?>>Dikembalikan</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-3 mb-3">
+                                <label for="">Tanggal Peminjaman / Awal</label>
+                                <input type="date" class="form-control" name="start_date" value="<?= $startDate ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Tanggal Pengembalian / Akhir</label>
+                                <input type="date" class="form-control" name="end_date" value="<?= $endDate ?>">
+                            </div>
+                            <div class="form-group col-lg-2 mb-3">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>
+
+                    </form>
+
                         <table id="peminjamanTable" class="table table-hover">
                             <thead>
                                 <tr>
@@ -355,36 +416,37 @@ $total_pages = ceil($total_peminjaman / $limit);
                         </table>
 
                         <!-- Pagination -->
-                        <nav aria-label="Page navigation example">
-                            <ul class="justify-content-center pagination">
-                                <!-- Previous Page Button -->
-                                <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
-                                    <a class="page-link" href="?page=<?= ($page <= 1) ? 1 : ($page - 1); ?>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-
-                                <!-- Page Buttons -->
-                                <?php
-                                $start_page = max(1, $page - 2);
-                                $end_page = min($total_pages, $page + 2);
-
-                                for ($i = $start_page; $i <= $end_page; $i++) :
-                                ?>
-                                    <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                                        <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        <?php if ($totalResults > $limit) : ?>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    <!-- Previous Page Button -->
+                                    <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
+                                        <a class="page-link" href="?page=<?= ($page <= 1) ? 1 : ($page - 1); ?>&status=<?= $status ?>&start_date=<?= $startDate ?>&end_date=<?= $endDate ?>" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
                                     </li>
-                                <?php endfor; ?>
 
-                                <!-- Next Page Button -->
-                                <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
-                                    <a class="page-link" href="?page=<?= ($page >= $total_pages) ? $total_pages : ($page + 1); ?>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <!-- End Pagination -->
+                                    <!-- Page Buttons -->
+                                    <?php
+                                    $start_page = max(1, $page - 2);
+                                    $end_page = min($totalPages, $page + 2);
+
+                                    for ($i = $start_page; $i <= $end_page; $i++) :
+                                    ?>
+                                        <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                                            <a class="page-link" href="?page=<?= $i; ?>&status=<?= $status ?>&start_date=<?= $startDate ?>&end_date=<?= $endDate ?>"><?= $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <!-- Next Page Button -->
+                                    <li class="page-item <?php if ($page >= $totalPages) echo 'disabled'; ?>">
+                                        <a class="page-link" href="?page=<?= ($page >= $totalPages) ? $totalPages : ($page + 1); ?>&status=<?= $status ?>&start_date=<?= $startDate ?>&end_date=<?= $endDate ?>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        <?php endif; ?>
 
     </div>
 </div>
@@ -448,18 +510,10 @@ $total_pages = ceil($total_peminjaman / $limit);
     <script src="../js/demo/chart-area-demo.js"></script>
     <script src="../js/demo/chart-pie-demo.js"></script>
     <script>
-    function searchWithPagination(page) {
-        var keyword = $('#searchInput').val();
-        $.ajax({
-            url: 'search.php',
-            method: 'POST',
-            data: {keyword: keyword, page: page},
-            success: function(data){
-                $('#peminjamanTable').html(data);
-            }
-        });
-    }
-    </script>
+    
+</script>
+
+
 
 
 </script>

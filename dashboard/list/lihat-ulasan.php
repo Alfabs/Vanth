@@ -130,11 +130,25 @@ if (!$bookDetails) {
                 </a>
             </li>
 
-            <!-- Nav Item - Laporan -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-file-alt"></i>
+                <a class="nav-link" href="../peminjaman/">
+                    <i class="fas fa-fw fa-handshake"></i>
+                    <span>Peminjaman</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link" href="../peminjaman/laporan.php">
+                    <i class="fas fa-print"></i>
                     <span>Laporan</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </li>
 
@@ -190,6 +204,13 @@ if (!$bookDetails) {
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="../peminjaman/laporan.php">
+                    <i class="fas fa-print"></i>
+                    <span>Laporan</span>
+                </a>
+            </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -226,6 +247,13 @@ if (!$bookDetails) {
                 <a class="nav-link" href="../user.php">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Data Pengguna</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </li>
 

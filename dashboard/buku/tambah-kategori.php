@@ -127,6 +127,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="../peminjaman/laporan.php">
+                    <i class="fas fa-print"></i>
+                    <span>Laporan</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -179,6 +193,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="../peminjaman/laporan.php">
+                    <i class="fas fa-print"></i>
+                    <span>Laporan</span>
+                </a>
+            </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -215,6 +236,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <a class="nav-link" href="../user.php">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Data Pengguna</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </li>
 

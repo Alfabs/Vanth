@@ -138,6 +138,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="../peminjaman/laporan.php">
+                    <i class="fas fa-print"></i>
+                    <span>Laporan</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
 
 
             <!-- Divider -->
@@ -192,6 +205,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="../peminjaman/laporan.php">
+                    <i class="fas fa-print"></i>
+                    <span>Laporan</span>
+                </a>
+            </li>
+
             <!-- Nav Item - Laporan -->
             <li class="nav-item">
                 <a class="nav-link" href="#">
@@ -228,6 +248,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <a class="nav-link" href="registrasi.php">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Registrasi</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../user.php">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Data Pengguna</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </li>
 
@@ -345,7 +379,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="logout.php">Logout</a>
+                    <a class="btn btn-primary" href="../logout.php">Logout</a>
                 </div>
             </div>
         </div>

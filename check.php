@@ -1,5 +1,5 @@
 <?php
-include 'process/process_login.php';
+include 'config.php';
 
 // Check apakah pengguna sudah login
 if (isset($_SESSION['username'])) {
@@ -64,7 +64,7 @@ if (isset($_SESSION['username'])) {
                         <div class="col-lg-10 mx-auto">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Reset Password</h1>
                                 </div>
                                 <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                                     <!-- Tambahkan pesan error jika ada -->
@@ -79,19 +79,16 @@ if (isset($_SESSION['username'])) {
                                             placeholder="Enter Email Address..." required>
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" name="password" placeholder="Password" required>
+                                        <input type="number" class="form-control form-control-user"
+                                            id="exampleInputPassword" name="password" placeholder="No Telepon" required>
                                     </div>
                                     <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">    
-                                            <a href="check.php" class="" for="customCheck">Lupa Password?</a>
-                                        </div>
                                         <div class="custom-control custom-checkbox small">    
                                             <a href="registrasi.php" class="" for="customCheck">Daftar akun peminjam?</a>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
-                                        Login
+                                        Kirim
                                     </button>
                                     <hr>
                                 </form>
