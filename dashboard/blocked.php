@@ -146,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="logout.php">
+                <a data-toggle="modal" data-target="#logoutModal" class="nav-link" href="logout.php">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -250,7 +250,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="logout.php">
+                <a data-toggle="modal" data-target="#logoutModal" class="nav-link" href="logout.php">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>

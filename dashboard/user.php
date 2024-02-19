@@ -125,7 +125,7 @@ $total_pages = ceil($total_users / $limit);
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="logout.php">
+                <a data-toggle="modal" data-target="#logoutModal" class="nav-link" href="logout.php">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -229,7 +229,7 @@ $total_pages = ceil($total_users / $limit);
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="logout.php">
+                <a data-toggle="modal" data-target="#logoutModal" class="nav-link" href="logout.php">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -292,27 +292,27 @@ $total_pages = ceil($total_users / $limit);
                 </nav>
                 <!-- End of Topbar -->
 
-              <!-- Begin Page Content -->
+                <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <h1 class="mb-3">Daftar Pengguna</h1>
+                <!-- Page Heading -->
+                <h1 class="mb-3">Daftar Pengguna</h1>
 
-        <!-- Filter by role -->
-        <form action="" method="get" class="mb-3">
-            <div class="form-row align-items-end">
-                <div class="form-group col-lg-3 mb-0">
-                    <label for="roleFilter" class="mr-2">Filter Berdasarkan Role:</label>
-                    <select class="form-control" id="roleFilter" name="role">
-                        <option value="peminjam">Peminjam</option>
-                        <option value="petugas">Petugas</option>
-                    </select>
-                </div>
-                <div class="form-group mb-0">
-                    <button type="submit" class="btn btn-primary btn-block">Filter</button>
-                </div>
-            </div>
-        </form>
+                <!-- Filter by role -->
+                <form action="" method="get" class="mb-3">
+                    <div class="form-row align-items-end">
+                        <div class="form-group col-lg-3 mb-0">
+                            <label for="roleFilter" class="mr-2">Filter Berdasarkan Role:</label>
+                            <select class="form-control" id="roleFilter" name="role">
+                                <option value="peminjam">Peminjam</option>
+                                <option value="petugas">Petugas</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                        </div>
+                    </div>
+                </form>
 
 
         <!-- Table to display users -->

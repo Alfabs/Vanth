@@ -142,7 +142,7 @@ $totalPages = ceil($totalResults / $limit);
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="../logout.php">
+                <a data-toggle="modal" data-target="#logoutModal" class="nav-link" href="../logout.php">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -248,7 +248,7 @@ $totalPages = ceil($totalResults / $limit);
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="../logout.php">
+                <a data-toggle="modal" data-target="#logoutModal" class="nav-link" href="../logout.php">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
