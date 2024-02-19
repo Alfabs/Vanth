@@ -11,6 +11,7 @@ if (!isset($_SESSION['username'])) {
 
 $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
+$userId = getLoggedInUserID($conn, $username);
 checkUserRole($userRole);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
