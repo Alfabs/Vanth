@@ -6,7 +6,7 @@ include '../config.php';
 
 // Check if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: ../../login.php"); // Redirect to the login page if not logged in
+    echo "<script>alert('Tolong login terlebih dahulu'); window.location.href = '../login.php';</script>";
     exit();
 }
 

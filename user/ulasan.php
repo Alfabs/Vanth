@@ -7,10 +7,9 @@ session_start();
 
 // Check apakah pengguna sudah login
 if (!isset($_SESSION['username'])) {
-    header("Location: ../login.php"); // Redirect ke halaman login jika belum login
+    echo "<script>alert('Tolong login terlebih dahulu'); window.location.href = '../login.php';</script>";
     exit();
 }
-
 
 
 
@@ -158,7 +157,7 @@ $id_buku = isset($_GET['id']) ? $_GET['id'] : '';
                             if ($result_buku && mysqli_num_rows($result_buku) > 0) {
                                 $row_buku = mysqli_fetch_assoc($result_buku);
                                 ?>
-                                <div class="card mb-4">
+                                <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4">
                                     <img src="../dashboard/buku/cover/<?php echo $row_buku['cover']; ?>"
                                         class="card-img-top " style="width: 100%; height: 370px; object-fit: cover;" alt="Cover Buku">
                                     <div class="card-body">

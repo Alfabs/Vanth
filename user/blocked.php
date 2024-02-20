@@ -6,7 +6,7 @@ session_start();
 
 // Check apakah pengguna sudah login
 if (!isset($_SESSION['username'])) {
-    header("Location: ../login.php"); // Redirect ke halaman login jika belum login
+    echo "<script>alert('Tolong login terlebih dahulu'); window.location.href = '../login.php';</script>";
     exit();
 }
 

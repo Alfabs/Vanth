@@ -5,7 +5,7 @@ include '../config.php';
 include '../function/func.php';
 
 if (!isset($_SESSION['username'])) {
-    header("Location: ../login.php"); 
+    echo "<script>alert('Tolong login terlebih dahulu'); window.location.href = '../login.php';</script>";
     exit();
 }
 
