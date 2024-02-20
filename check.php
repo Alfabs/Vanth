@@ -1,10 +1,77 @@
 <?php
-include 'config.php';
+// Include library PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-// Check apakah pengguna sudah login
-if (isset($_SESSION['username'])) {
-    header("Location: dashboard/index.php"); // Redirect ke halaman login jika belum login
-    exit();
+require 'vendor/autoload.php'; // Sesuaikan dengan path PHPMailer Anda
+
+include 'config.php';
+include 'function/func.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Ambil email dari form
+    $email = $_POST['email'];
+
+    // Periksa apakah email sudah ada di tabel reset_password
+    $check_email_query = "SELECT * FROM reset_password WHERE email = '$email'";
+    $check_email_result = $conn->query($check_email_query);
+
+    if ($check_email_result->num_rows > 0) {
+        // Email sudah ada di tabel reset_password, update reset_code
+
+        // Generate reset code
+        $reset_code = '';
+
+        // Menghasilkan 6 karakter acak
+        for ($i = 0; $i < 6; $i++) {
+            $reset_code .= rand(0, 9); // Menghasilkan angka acak dari 0 hingga 9
+        }
+
+        // Update reset code di database
+        $update_reset_code_query = "UPDATE reset_password SET reset_code = '$reset_code' WHERE email = '$email'";
+        if ($conn->query($update_reset_code_query) === TRUE) {
+            // Kirim email menggunakan fungsi sendResetPasswordEmail
+            if (sendResetPasswordEmail($email, $reset_code)) {
+                // Redirect ke halaman reset password dengan mengirim email sebagai parameter
+                header('location: reset/reset_password.php?email=' . urlencode($email));
+            } else {
+                // Jika gagal mengirim email, tampilkan pesan error
+                $error_message = "Failed to send reset password email.";
+            }
+        } else {
+            // Redirect atau tampilkan pesan error
+            echo "Error updating reset code: " . $conn->error;
+        }
+    } else {
+        // Email belum ada di tabel reset_password, tambahkan data baru
+
+        // Generate reset code
+        $reset_code = '';
+
+        // Menghasilkan 6 karakter acak
+        for ($i = 0; $i < 6; $i++) {
+            $reset_code .= rand(0, 9); // Menghasilkan angka acak dari 0 hingga 9
+        }
+
+        // Simpan reset code ke database
+        $sql = "INSERT INTO reset_password (email, reset_code) VALUES ('$email', '$reset_code')";
+
+        if ($conn->query($sql) === TRUE) {
+            // Kirim email menggunakan fungsi sendResetPasswordEmail
+            if (sendResetPasswordEmail($email, $reset_code)) {
+                // Redirect ke halaman reset password dengan mengirim email sebagai parameter
+                header('location: reset/reset_password.php?email=' . urlencode($email));
+            } else {
+                // Jika gagal mengirim email, tampilkan pesan error
+                $error_message = "Failed to send reset password email.";
+            }
+        } else {
+            // Redirect atau tampilkan pesan error
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }
+
+    $conn->close();
 }
 ?>
 
@@ -78,10 +145,7 @@ if (isset($_SESSION['username'])) {
                                             id="exampleInputEmail" name="email" aria-describedby="emailHelp"
                                             placeholder="Enter Email Address..." required>
                                     </div>
-                                    <div class="form-group">
-                                        <input type="number" class="form-control form-control-user"
-                                            id="exampleInputPassword" name="password" placeholder="No Telepon" required>
-                                    </div>
+
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox small">    
                                             <a href="registrasi.php" class="" for="customCheck">Daftar akun peminjam?</a>
