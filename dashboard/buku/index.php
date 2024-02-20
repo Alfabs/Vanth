@@ -365,6 +365,7 @@ $total_pages = ceil($total_books / $limit);
                         <td class="text-center">
                             <a class="badge badge-danger" onclick="return confirm('Yakin Mau Hapus buku?')" href="delete.php?id=<?=$row['id'];?>">Delete</a>
                             <a class="badge badge-success" href="edit.php?id=<?=$row['id'];?>">Edit</a>
+                            <a class="badge badge-primary" href="detail.php?id=<?=$row['id'];?>">Detail</a>
                         </td>
                     </tr>
                 <?php endwhile;?>

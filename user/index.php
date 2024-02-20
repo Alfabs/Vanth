@@ -431,7 +431,15 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
 </script>
 
 <script>
-    function filterBooks(categoryId) {
+    
+</script>
+
+
+
+
+
+
+function filterBooks(categoryId) {
         $(".searchable").each(function() {
             if (categoryId === null || $(this).data('category-id') === categoryId) {
                 $(this).show();
@@ -442,14 +450,6 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
         // Tampilkan kembali rekomendasi buku setelah melakukan filter
         $(".recommendation").show();
     }
-</script>
-
-
-
-
-
-
-
 
 
 

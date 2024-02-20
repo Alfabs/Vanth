@@ -39,6 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tahun_terbit = htmlspecialchars($_POST["tahun_terbit"]);
     $kategori_id = htmlspecialchars($_POST["kategori_id"]);
     $stok = htmlspecialchars($_POST["stok"]);
+    $deskripsi = htmlspecialchars($_POST["deskripsi"]);
+    $tempat = htmlspecialchars($_POST["tempat"]);
 
     // Proses unggah gambar baru jika ada
     if ($_FILES['cover']['name']) {
@@ -55,15 +57,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Update data buku dengan cover yang baru diunggah
         $update_book_query = "UPDATE buku
-                              SET judul = '$judul', penulis = '$penulis', penerbit = '$penerbit',
+                              SET judul = '$judul', deskripsi = '$deskripsi', penulis = '$penulis', penerbit = '$penerbit',
                                   tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id',
-                                  cover = '$cover_name', stok = '$stok'
+                                  cover = '$cover_name', stok = '$stok', tempat = '$tempat'
                               WHERE id = $id";
     } else {
         // Update data buku tanpa mengubah cover
         $update_book_query = "UPDATE buku
-                              SET judul = '$judul', penulis = '$penulis', penerbit = '$penerbit',
-                                  tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id', stok = '$stok'
+                              SET judul = '$judul', deskripsi = '$deskripsi', penulis = '$penulis', penerbit = '$penerbit',
+                                  tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id', stok = '$stok', tempat = '$tempat' 
                               WHERE id = $id";
     }
 
@@ -358,15 +360,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>reviewva
                 <?php } ?>
                 <div class="form-group">
+                    <label for="">Judul :</label>
                     <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" required value="<?php echo $book_data['judul']; ?>">
                 </div>
                 <div class="form-group">
+                    <label for="">Deskripsi :</label>
+                    <input type="text" class="form-control" id="judul" name="deskripsi" placeholder="Deskripsi" required value="<?php echo $book_data['deskripsi']; ?>">
+                </div>
+                <div class="form-group">
+                    <label for="">Rak :</label>
+                    <input type="number" class="form-control" id="judul" name="tempat" placeholder="Tempat" required value="<?php echo $book_data['tempat']; ?>">
+                </div>
+                <div class="form-group">
+                    <label for="">Penulis :</label>
                     <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Penulis" required value="<?php echo $book_data['penulis']; ?>">
                 </div>
                 <div class="form-group">
+                    <label for="">Penerbit :</label>
                     <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Penerbit" required value="<?php echo $book_data['penerbit']; ?>">
                 </div>
                 <div class="form-group">
+                    <label for="">Tahun Terbit :</label>
                     <input type="text" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Tahun Terbit" required value="<?php echo $book_data['tahun_terbit']; ?>">
                 </div>
                 <div class="form-group">

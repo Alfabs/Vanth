@@ -41,8 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["keyword"])) {
             echo '<td>'.$row['tahun_terbit'].'</td>';
             echo '<td>'.$row['stok'].'</td>';
             echo '<td class="text-center">';
-            echo '<a class="badge badge-danger mr-2" onclick="return confirm(\'Yakin Mau Hapus buku?\')" href="delete.php?id='.$row['id'].'">Delete</a>';
-            echo '<a class="badge badge-success" href="edit.php?id='.$row['id'].'">Edit</a>';
+            echo '<a class="badge badge-danger mr-1" onclick="return confirm(\'Yakin Mau Hapus buku?\')" href="delete.php?id='.$row['id'].'">Delete</a>';
+            echo '<a class="badge badge-success mr-1" href="edit.php?id='.$row['id'].'">Edit</a>';
+            echo '<a class="badge badge-primary" href="detail.php?id='.$row['id'].'">Detail</a>';
             echo '</td>';
             echo '</tr>';
         }

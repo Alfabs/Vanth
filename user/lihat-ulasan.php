@@ -138,18 +138,18 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
             <div class="col-lg-3">
                 <?php
                 // Fetch book details
-                $queryBookDetails = "SELECT judul, penulis, penerbit, cover FROM buku WHERE id = $selectedBookId";
+                $queryBookDetails = "SELECT judul, penulis, penerbit, deskripsi, cover FROM buku WHERE id = $selectedBookId";
                 $resultBookDetails = mysqli_query($conn, $queryBookDetails);
                 if ($resultBookDetails && mysqli_num_rows($resultBookDetails) > 0) {
                     $rowBookDetails = mysqli_fetch_assoc($resultBookDetails);
                     ?>
-                    <div class="card mb-4">
+                    <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4">
                         <img src="../dashboard/buku/cover/<?php echo $rowBookDetails['cover']; ?>"
                             class="card-img-top" style="width: 100%; height: 370px; object-fit: cover;" alt="Cover Buku">
                         <div class="card-body">
                             <h5 class="font-weight-bold card-title"><?php echo $rowBookDetails['judul']; ?></h5>
-                            <p class="card-text">Penulis: <?php echo $rowBookDetails['penulis']; ?></p>
-                            <p class="card-text">Penerbit: <?php echo $rowBookDetails['penerbit']; ?></p>
+                            <p class="card-text">Deskripsi : <br> <?php echo $rowBookDetails['deskripsi']; ?></p>
+
                         </div>
                     </div>
                 <?php
@@ -162,12 +162,12 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
             <div class="col-lg-5">
                 <h1 class="h3 mb-4 text-gray-800"><?= $bookDetails['judul']; ?></h1>
                 <p class="mb-4">
-                    <strong>Pengarang:</strong> <?= $bookDetails['penulis']; ?> |
+                    <strong>Penulis:</strong> <?= $bookDetails['penulis']; ?> |
                     <strong>Penerbit:</strong> <?= $bookDetails['penerbit']; ?>
                 </p>
                 <!-- Reviews Section -->
                 <?php while ($rowReview = mysqli_fetch_assoc($resultReviews)) : ?>
-                    <div class="card mb-4 ">
+                    <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.3);" class="card mb-4 ">
                         <div class="card-body">
                             <h5 class="card-title"><?= $rowReview['nama_lengkap']; ?></h5>
                             <p class="card-text"><?= $rowReview['ulasan']; ?></p>

@@ -1,88 +1,33 @@
 <?php
-include '../../config.php';
-include '../../function/func.php';
-
 session_start();
 
-// Check apakah pengguna sudah login
+include '../../function/func.php';
+include '../../config.php';
+
+// Check if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: ../../login.php"); // Redirect ke halaman login jika belum login
+    header("Location: ../../login.php"); // Redirect to the login page if not logged in
     exit();
 }
 
+// Fetch user role from the database based on the username in the session
 $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
 dataBuku($userRole);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ambil data yang dikirimkan dari form
-    $judul = htmlspecialchars($_POST["judul"]);
-    $penulis = htmlspecialchars($_POST["penulis"]);
-    $penerbit = htmlspecialchars($_POST["penerbit"]);
-    $tahun_terbit = htmlspecialchars($_POST["tahun_terbit"]);
-    $kategori_id = htmlspecialchars($_POST["kategori_id"]);
-    $stok = htmlspecialchars($_POST["stok"]);
-    $deskripsi = htmlspecialchars($_POST["deskripsi"]);
-    $tempat = htmlspecialchars($_POST["tempat"]);
-
-    // Lakukan validasi dan penambahan buku
-if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_terbit) && !empty($kategori_id)) {
-    // Query untuk memeriksa apakah buku sudah ada
-    $check_book_query = "SELECT * FROM `buku` WHERE `judul` = '$judul' AND `penulis` = '$penulis' AND `penerbit` = '$penerbit' AND `tahun_terbit` = '$tahun_terbit' AND `kategori_id` = '$kategori_id'";
-    $result_check_book = mysqli_query($conn, $check_book_query);
-    
-    if (mysqli_num_rows($result_check_book) > 0) {
-        // Buku sudah ada, tampilkan pesan error
-        $error_message = "Buku ini sudah ada.";
-    } else {
-        // Buku belum ada, lanjutkan dengan penambahan buku
-        $perpus_id = 0; 
-        $cover = $_FILES['cover'];
-        $cover_path = 'cover/';
-
-        if (move_uploaded_file($cover['tmp_name'], $cover_path . $cover['name'])) {
-            // File cover berhasil diunggah, simpan data buku ke database
-            $cover_filename = $cover['name'];
-
-        $add_book_query = "INSERT INTO `buku` (`perpus_id`, `judul`, `deskripsi`, `cover`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `tempat`, `kategori_id`, `created_at`)
-                               VALUES ('$perpus_id', '$judul', '$deskripsi', '$cover_filename', '$penulis', '$penerbit', '$tahun_terbit', '$stok', '$tempat', '$kategori_id',  current_timestamp())";
-
-            // Eksekusi query dan tampilkan pesan sukses atau error
-            if (mysqli_query($conn, $add_book_query)) {
-                $success_message = "Buku berhasil ditambahkan.";
-            } else {
-                $error_message = "Error: " . mysqli_error($conn);
-            }
-        } else {
-            $error_message = "Error uploading cover file.";
-        }
-    }
-} else {
-    $error_message = "Semua kolom harus diisi.";
+// Check if a book ID is provided
+if (!isset($_GET['id'])) {
+    // Redirect or handle the case when no book ID is provided
+    header("Location: ulasan.php");
+    exit();
 }
 
-}
+$bookId = $_GET['id'];
 
-// Query untuk mengambil data kategori buku dari database
-$get_kategori_query = "SELECT * FROM kategori_buku";
-$result_kategori = mysqli_query($conn, $get_kategori_query);
+$query = "SELECT * FROM buku WHERE id = '$bookId'";
+$result = mysqli_query($conn, $query);
 
-// Inisialisasi variabel untuk menyimpan opsi kategori buku
-$options_kategori = '';
-
-// Memproses hasil query kategori buku menjadi opsi HTML
-if (mysqli_num_rows($result_kategori) > 0) {
-    while ($row_kategori = mysqli_fetch_assoc($result_kategori)) {
-        $options_kategori .= '<option value="' . $row_kategori['id'] . '">' . $row_kategori['nama_kategori'] . '</option>';
-    }
-}
 ?>
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -95,9 +40,11 @@ if (mysqli_num_rows($result_kategori) > 0) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard</title>
+    <title>Buku</title>
 
     <!-- Custom fonts for this template-->
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -105,7 +52,6 @@ if (mysqli_num_rows($result_kategori) > 0) {
 
     <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
-
 
 </head>
 
@@ -145,7 +91,7 @@ if (mysqli_num_rows($result_kategori) > 0) {
 
             <!-- Nav Item - Pendataan Barang atau Buku -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link active" href="index.php">
                     <i class="fas fa-fw fa-book"></i>
                     <span>Pendataan Buku</span>
                 </a>
@@ -232,7 +178,7 @@ if (mysqli_num_rows($result_kategori) > 0) {
                 </a>
             </li>
 
- 
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -300,7 +246,7 @@ if (mysqli_num_rows($result_kategori) > 0) {
             <!-- Main Content -->
             <div id="content">
 
-                <!-- Topbar -->
+            <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
@@ -308,114 +254,75 @@ if (mysqli_num_rows($result_kategori) > 0) {
                         <i class="fa fa-bars"></i>
                     </button>
 
+                    
+
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+
+                        
+                        
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                    <?= $_SESSION['username']; ?>
-                                </span>
-                                <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION['username'];?></span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
+                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
+
                     </ul>
-
-                </nav>
-
 
                 </nav>
                 <!-- End of Topbar -->
 
-              <!-- Begin Page Content -->
-    <!-- Form Tambah Buku -->
-<div class="container-fluid col-lg-6">
-    <div class="d-sm-flex justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Tambah Buku</h1>
-    </div>
-
-    <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
-        <!-- Tambahkan pesan sukses jika ada -->
-        <?php if (isset($success_message)) { ?>
-            <div class="alert alert-success" role="alert">
-                <?php echo $success_message; ?>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800 text-center">Detail Buku</h1>
+                    <div class="row justify-content-center">
+                        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                            <div class="card mb-3" style="max-width: 800px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.4);">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <img src="cover/<?= $row['cover'];?>" class="card-img" alt="...">
+                                    </div>
+                                    <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title font-weight-bold">Judul : <?=$row['judul'];?></h5>
+                                        <p class="card-text">Penulis : <?=$row['penulis'];?></p>
+                                        <p class="card-text">Tahun Terbit : <?=$row['tahun_terbit'];?></p>
+                                        <p class="card-text">Rak ke : <?=$row['tempat'];?></p>
+                                        <p class="card-text">Deskripsi : <br><?=$row['deskripsi'];?></p>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
             </div>
-        <?php } ?>
-        <!-- Tambahkan pesan error jika ada -->
-        <?php if (isset($error_message)) { ?>
-            <div class="alert alert-danger" role="alert">
-                <?php echo $error_message; ?>
-            </div>
-        <?php } ?>
-        
-        <div class="form-group">
-            <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" required>
+            
         </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="judul" name="deskripsi" placeholder="Deskripsi" required>
-        </div>
-        <div class="form-group">
-            <input type="number" class="form-control" id="judul" name="tempat" placeholder="Tempat" required>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Penulis" required>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Penerbit" required>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Tahun Terbit" required>
-        </div>
-        <div class="form-group">
-            <label for="kategori_id">Kategori:</label>
-            <select class="form-control" id="kategori_id" name="kategori_id">
-                <?php echo $options_kategori; ?>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="stok">Stok Buku</label>
-            <input type="number" class="form-control" id="stok" name="stok" placeholder="Stok" required>
-        </div>
-        <div class="form-group">
-            <label for="cover">Cover Buku:</label>
-            <div class="custom-file">
-                <input id="cover" name="cover" accept="image/*" required type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-            </div>
-            <!-- Untuk menampilkan preview cover -->
-            <img id="cover-preview" class="mt-2" style="max-width: 200px; max-height: 200px; display: none;">
-        </div>
-        <button type="submit" class="btn btn-primary btn-user btn-block">
-            Tambah Buku
-        </button>
-        <hr>
-    </form>
-</div>
-    <!-- End Page Content -->
-
-
-                    
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2021</span>
                 </div>
-            </footer>
-            <!-- End of Footer -->
-
-        </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
         <!-- End of Content Wrapper -->
 
     </div>
@@ -445,6 +352,8 @@ if (mysqli_num_rows($result_kategori) > 0) {
             </div>
         </div>
     </div>
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="../vendor/jquery/jquery.min.js"></script>
@@ -462,26 +371,11 @@ if (mysqli_num_rows($result_kategori) > 0) {
     <!-- Page level custom scripts -->
     <script src="../js/demo/chart-area-demo.js"></script>
     <script src="../js/demo/chart-pie-demo.js"></script>
-    <script>
-    // Function untuk menampilkan preview cover
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
 
-            reader.onload = function (e) {
-                $('#cover-preview').attr('src', e.target.result).show();
-            };
 
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 
-    // Event listener untuk input file
-    $("#cover").change(function () {
-        readURL(this);
-    });
+
 </script>
-
 
 </body>
 
