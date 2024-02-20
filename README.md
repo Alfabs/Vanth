@@ -5,6 +5,7 @@ Aplikasi Perpustakaan Digital ini adalah aplikasi perpustakaan digital berbasis 
 ## Fitur
 
 - Registrasi & Login
+- Dashboard admin & petugas
 - Mengelola Data Buku Perpustakaan (Create, Read, Update, Delete)
 - Meminjam dan Mengembalikan buku sebagai peminjam
 - Bookmark bagi peminjam
@@ -21,7 +22,7 @@ git clone https://github.com/Alfabs/Vanth.git
 
 2. Pastikan xampp atau client server sudah terdownload dan kunjungi [http/localhostphp](http://localhost/phpmyadmin/)http://localhost/phpmyadmin/ untuk xampp, bagi yang lainnya menyesuaikan. Jika ingin mendowload xampp https://www.apachefriends.org/download.html
    
-3. Buat database "perpustakaan", lalu Import database perpustakaan.sql ke database yang sudah dibuat
+3. Buat database "perpustakaan", lalu Import database `perpustakaan.sql` ke database yang sudah dibuat
    
 4. Buka index.php pada folder perpustakaan, maka aplikasi siap dijalankan
 
