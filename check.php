@@ -3,7 +3,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // Sesuaikan dengan path PHPMailer Anda
+require 'vendor/autoload.php'; 
 
 include 'config.php';
 include 'function/func.php';
