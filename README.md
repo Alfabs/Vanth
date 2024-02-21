@@ -31,3 +31,9 @@ git clone https://github.com/Alfabs/Vanth.git
 - [FPDF](https://github.com/Setasign/FPDF)
 - [PHPMailer](https://github.com/PHPMailer/PHPMailer)
 - [PHPOffice](https://github.com/PHPOffice/PhpSpreadsheet)
+
+# Catatan
+
+- Di direktori file `function/func.php` di bagian `function sendResetPasswordEmail()`, ada bagian code 
+  `$mail->Username = ''` dan `$mail->Password = ''`, Username ini adalah gmail yang digunakan dan Password ini adalah aplikasi sandi atau apps password dari gmail.
+
