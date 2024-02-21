@@ -168,7 +168,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         <?php while ($row = mysqli_fetch_assoc($recommendationResult)) : ?>
                             <div class="col-lg-3 mb-3 recommendation">
                                 <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card search-result">
-                                    <img src="dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 370px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
+                                    <img src="dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
                                     <div class="card-body">
                                         <h5 class="font-weight-bold card-title"><?php echo $row['judul']; ?></h5>
                                         <p class="card-text"><?php echo $row['penulis']; ?></p>
@@ -206,7 +206,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         <?php while ($row = mysqli_fetch_assoc($result)) :?>
                             <div class="col-lg-3 mb-3 searchable" data-category-id="<?php echo $row['kategori_id']; ?>">
                                 <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card search-result">
-                                    <img src="dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 370px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
+                                    <img src="dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
                                     <div class="card-body">
                                         <h5 class="font-weight-bold card-title"><?php echo $row['judul']; ?></h5>
                                         <p class="card-text"><?php echo $row['penulis']; ?></p>
