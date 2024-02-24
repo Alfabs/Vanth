@@ -159,16 +159,20 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="index.php">
+                                    <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Home
+                                </a>
+                                <a class="dropdown-item" href="peminjaman.php">
                                     <i class="fas fa-handshake fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Peminjaman
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="far fa-bookmark fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="bookmark.php">
+                                    <i class="far fa-solid fa-heart fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Bookmark
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="../dashboard/logout.php" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -196,7 +200,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                             $buttonText = $isBorrowed ? 'Kembalikan' : 'Pinjam';
                             $buttonClass = $isBorrowed ? 'btn-danger' : 'btn-primary';?>
                             <div class="col-lg-3 mb-4 searchable">
-                                <div class="card search-result">
+                                <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);"  class="card search-result">
                                     <img src="../dashboard/buku/cover/<?php echo $row['cover']; ?>"
                                         style="width: 100%; height: 410px; object-fit: cover;"
                                         class="card-img-top img-fluid" alt="Cover Buku">
@@ -217,7 +221,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                                         <?php endif; ?>
                                         <a href="bookmark.php?id=<?= $row['id']; ?>&action=delete"
                                             class="btn btn-secondary" onclick="return confirmDelete()">
-                                            <i class="fas fa-bookmark"></i></a>
+                                            <i class="fas fa-solid fa-heart"></i></a>
                                     </div>
                                 </div>
                             </div>

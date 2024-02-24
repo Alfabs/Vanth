@@ -201,16 +201,20 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="index.php">
+                                    <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Home
+                                </a>
                                 <a class="dropdown-item" href="peminjaman.php">
                                     <i class="fas fa-handshake fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Peminjaman
                                 </a>
                                 <a class="dropdown-item" href="bookmark.php">
-                                    <i class="far fa-bookmark fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="far fa-solid fa-heart fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Bookmark
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -356,6 +360,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
             </div>
             <!-- End of Main Content -->
 
+            
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -365,7 +370,6 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                 </div>
             </footer>
             <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 

@@ -184,12 +184,16 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="index.php">
+                                    <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Home
+                                </a>
                                 <a class="dropdown-item" href="#">
                                     <i class="fas fa-handshake fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Peminjaman
                                 </a>
                                 <a class="dropdown-item" href="bookmark.php">
-                                    <i class="far fa-bookmark fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="far fa-solid fa-heart fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Bookmark
                                 </a>
                                 <div class="dropdown-divider"></div>
@@ -215,7 +219,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                         <!-- Message for no search results -->
                         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                 <div class="col-lg-3 mb-3 searchable">
-                    <div class="card search-result">
+                    <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);"  class="card search-result">
                         <img src="../dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
                         <div class="card-body">
                             <h5 class="font-weight-bold card-title"><?php echo $row['judul']; ?></h5>
@@ -239,10 +243,10 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
 
                             if (mysqli_num_rows($checkResult) > 0) : ?>
                                 <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="btn btn-secondary" onclick="return confirmDelete()">
-                                    <i class="fas fa-bookmark"></i></a>
+                                    <i class="fas fa-solid fa-heart"></i></a>
                             <?php else : ?>
                                 <a href="index.php?id=<?= $row['id']; ?>&action=add" class="btn btn-secondary">
-                                    <i class="far fa-bookmark"></i></a>
+                                    <i class="far fa-regular fa-heart"></i></a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -257,6 +261,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
             </div>
             <!-- End of Main Content -->
 
+            
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -266,7 +271,6 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                 </div>
             </footer>
             <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 
