@@ -309,7 +309,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         // Tentukan apakah tombol "Pinjam" atau "Kembalikan" yang harus ditampilkan
                         $buttonText = $isBorrowed ? 'Kembalikan' : 'Pinjam';
                         $buttonClass = $isBorrowed ? 'btn-danger' : 'btn-primary'; ?>
-                        <div class="col-lg-3 mb-3 recommendation">
+                        <div class="col-lg-3 mb-3 searchable" data-category-id="<?php echo $row['kategori_id']; ?>">
                             <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card search-result">
                                 <img src="../dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
                                 <div class="card-body">

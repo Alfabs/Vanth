@@ -15,8 +15,6 @@ $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
 checkUserRole($userRole);
 
-
-
 // Check if a book ID is provided
 if (!isset($_GET['id'])) {
     // Redirect or handle the case when no book ID is provided
@@ -43,15 +41,40 @@ if (!$bookDetails) {
 $reviewsPerPage = 2;
 $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($currentpage - 1) * $reviewsPerPage;
-$queryReviews = "SELECT user.id, user.nama_lengkap, ulasan_buku.user, ulasan_buku.ulasan, ulasan_buku.rating, ulasan_buku.id
-                 FROM ulasan_buku
-                 INNER JOIN user ON ulasan_buku.user = user.id
-                 WHERE ulasan_buku.buku = $selectedBookId
-                 LIMIT $offset, $reviewsPerPage";
+
+// Check if the "Ulasan Saya" filter is applied
+if (isset($_GET['user_reviews']) && $_GET['user_reviews'] == 1) {
+    $queryReviews = "SELECT user.id, user.nama_lengkap, ulasan_buku.user, ulasan_buku.ulasan, ulasan_buku.rating, ulasan_buku.id
+                     FROM ulasan_buku
+                     INNER JOIN user ON ulasan_buku.user = user.id
+                     WHERE ulasan_buku.buku = $selectedBookId AND ulasan_buku.user = $userId
+                     LIMIT $offset, $reviewsPerPage";
+
+    // Set the button text to "Reset" since the filter is applied
+    $buttonText = "Reset";
+} else {
+    // Fetch all reviews if no filter is applied
+    $queryReviews = "SELECT user.id, user.nama_lengkap, ulasan_buku.user, ulasan_buku.ulasan, ulasan_buku.rating, ulasan_buku.id
+                     FROM ulasan_buku
+                     INNER JOIN user ON ulasan_buku.user = user.id
+                     WHERE ulasan_buku.buku = $selectedBookId
+                     LIMIT $offset, $reviewsPerPage";
+
+    // Set the button text to "Ulasan Saya" since the filter is not applied
+    $buttonText = "Ulasan Saya";
+}
+
 $resultReviews = mysqli_query($conn, $queryReviews);
 
 // Get total reviews
-$queryTotalReviews = "SELECT COUNT(*) AS total FROM ulasan_buku WHERE buku = $selectedBookId";
+if (isset($_GET['user_reviews']) && $_GET['user_reviews'] == 1) {
+    // If "My Reviews" filter is applied
+    $queryTotalReviews = "SELECT COUNT(*) AS total FROM ulasan_buku WHERE buku = $selectedBookId AND user = $userId";
+} else {
+    // If no filter is applied
+    $queryTotalReviews = "SELECT COUNT(*) AS total FROM ulasan_buku WHERE buku = $selectedBookId";
+}
+
 $resultTotalReviews = mysqli_query($conn, $queryTotalReviews);
 $rowTotalReviews = mysqli_fetch_assoc($resultTotalReviews);
 $totalReviews = $rowTotalReviews['total'];
@@ -59,18 +82,15 @@ $totalReviews = $rowTotalReviews['total'];
 // Calculate total pages
 $totalPages = ceil($totalReviews / $reviewsPerPage);
 
-// Query untuk memeriksa apakah pengguna sudah meminjam buku tersebut
+// Query to check if the user has borrowed the book
 $query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$selectedBookId'";
 $result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
 
-// Jika pengguna belum meminjam buku, redirect kembali ke halaman index
+// If the user has not borrowed the book, redirect back to the index page
 if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
     echo "<script>alert('Anda belum meminjam buku ini.'); window.location.href = 'index.php';</script>";
     exit();
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -153,6 +173,7 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
         <!-- Row for Book Details and Cover -->
         <div class="row justify-content-center ">
             <div class="col-lg-3">
+                
                 <?php
                 // Fetch book details
                 $queryBookDetails = "SELECT judul, penulis, penerbit, deskripsi, cover FROM buku WHERE id = $selectedBookId";
@@ -163,7 +184,7 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
                     <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4">
                         <img src="../dashboard/buku/cover/<?php echo $rowBookDetails['cover']; ?>"
                             class="card-img-top" style="width: 100%; height: 370px; object-fit: cover;" alt="Cover Buku">
-                        <div class="card-body">
+                        <div class="card-body ">
                             <h5 class="font-weight-bold card-title"><?php echo $rowBookDetails['judul']; ?></h5>
                             <p class="card-text">Deskripsi : <br> <?php echo $rowBookDetails['deskripsi']; ?></p>
 
@@ -178,10 +199,15 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
             <!-- Column for Book Reviews -->
             <div class="col-lg-5">
                 <h1 class="h3 mb-4 text-gray-800"><?= $bookDetails['judul']; ?></h1>
-                <p class="mb-4">
+                <p class="mb-4 ">
                     <strong>Penulis:</strong> <?= $bookDetails['penulis']; ?> |
                     <strong>Penerbit:</strong> <?= $bookDetails['penerbit']; ?>
                 </p>
+                
+                <!-- Filter button -->
+                <a href="?id=<?= $selectedBookId ?>&user_reviews=<?= isset($_GET['user_reviews']) && $_GET['user_reviews'] == 1 ? 0 : 1; ?>"
+                    class="btn btn-primary mb-2"><?= $buttonText; ?></a>
+
                 <!-- Reviews Section -->
 <?php while ($rowReview = mysqli_fetch_assoc($resultReviews)) : ?>
     <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.3);" class="card mb-4 ">
@@ -211,31 +237,32 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
 <?php endwhile; ?>
 
                 <ul class="pagination justify-content-center">
-                                <?php if ($currentpage > 1) : ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?id=<?= $selectedBookId ?>&page=<?= $currentpage - 1; ?>" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                                <?php
-                                $startPage = max(1, $currentpage - 2);
-                                $endPage = min($startPage + 4, $totalPages);
-                                for ($i = $startPage; $i <= $endPage; $i++) : ?>
-                                    <li class="page-item <?php echo ($i == $currentpage) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?id=<?= $selectedBookId ?>&page=<?= $i; ?>">
-                                            <?= $i; ?>
-                                        </a>
-                                    </li>
-                                <?php endfor; ?>
-                                <?php if ($currentpage < $totalPages) : ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?id=<?= $selectedBookId ?>&page=<?= $currentpage + 1; ?>" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
+    <?php if ($currentpage > 1) : ?>
+        <li class="page-item">
+            <a class="page-link" href="?id=<?= $selectedBookId ?>&page=<?= $currentpage - 1; ?>&user_reviews=<?= isset($_GET['user_reviews']) ? $_GET['user_reviews'] : '' ?>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+    <?php endif; ?>
+    <?php
+    $startPage = max(1, $currentpage - 2);
+    $endPage = min($startPage + 4, $totalPages);
+    for ($i = $startPage; $i <= $endPage; $i++) : ?>
+        <li class="page-item <?php echo ($i == $currentpage) ? 'active' : ''; ?>">
+            <a class="page-link" href="?id=<?= $selectedBookId ?>&page=<?= $i; ?>&user_reviews=<?= isset($_GET['user_reviews']) ? $_GET['user_reviews'] : '' ?>">
+                <?= $i; ?>
+            </a>
+        </li>
+    <?php endfor; ?>
+    <?php if ($currentpage < $totalPages) : ?>
+        <li class="page-item">
+            <a class="page-link" href="?id=<?= $selectedBookId ?>&page=<?= $currentpage + 1; ?>&user_reviews=<?= isset($_GET['user_reviews']) ? $_GET['user_reviews'] : '' ?>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    <?php endif; ?>
+</ul>
+
                 
         </div>
     </div>
