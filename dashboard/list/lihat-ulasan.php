@@ -332,7 +332,7 @@ if (!$bookDetails) {
                         <!-- Menampilkan tombol hapus jika pengguna adalah admin -->
                         <?php if ($userRole === "admin") : ?>
                             <!-- Tombol hapus -->
-                            <button class="btn btn-danger delete-review-btn" data-review-id="<?= $rowReview['id']; ?>" style="position: absolute; right: 10px; top: 10px;"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-danger delete-review-btn" data-buku-id="<?=$selectedBookId?>" data-review-id="<?= $rowReview['id']; ?>" style="position: absolute; right: 10px; top: 10px;"><i class="fas fa-trash"></i></button>
                         <?php endif; ?>
                         <h5 class="card-title"><?= $rowReview['nama_lengkap']; ?></h5>
                         <p class="card-text"><?= $rowReview['ulasan']; ?></p>
@@ -441,6 +441,7 @@ if (!$bookDetails) {
         $('.delete-review-btn').click(function() {
             // Dapatkan ID ulasan yang akan dihapus
             let reviewId = $(this).data('review-id');
+            let bukuId = $(this).data('buku-id');
 
             // Tampilkan konfirmasi SweetAlert
             Swal.fire({
@@ -456,7 +457,7 @@ if (!$bookDetails) {
                 // Jika pengguna menekan tombol Ya, hapus
                 if (result.isConfirmed) {
                     // Redirect to delete_review.php with the review ID as parameter
-                    window.location.href = 'delete_review.php?id=' + reviewId;
+                    window.location.href = 'delete_review.php?id=' + reviewId +'&book_id=' + bukuId;
                 }
             });
         });

@@ -23,6 +23,7 @@ if (!isset($_GET['id'])) {
 }
 
 $reviewId = $_GET['id'];
+$bookId = $_GET['book_id'];
 
 // Perform deletion of the review
 $queryDeleteReview = "DELETE FROM ulasan_buku WHERE id = $reviewId";
@@ -30,7 +31,7 @@ $resultDeleteReview = mysqli_query($conn, $queryDeleteReview);
 
 if ($resultDeleteReview) {
     // If review deleted successfully, redirect back to the review page with success message
-    header("Location: ulasan.php?success=1");
+    header("Location: lihat-ulasan.php?id=".$bookId);
     exit();
 } else {
     // If deletion failed, redirect back to the review page with error message
