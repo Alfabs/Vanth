@@ -1,86 +1,57 @@
 <?php
-include '../config.php';
-include '../function/func.php';
-
 session_start();
 
+include '../function/func.php';
+include '../config.php';
 
-// Check apakah pengguna sudah login
+// Check if the user is not logged in
 if (!isset($_SESSION['username'])) {
     echo "<script>alert('Tolong login terlebih dahulu'); window.location.href = '../login.php';</script>";
     exit();
 }
 
-
-
-
+// Fetch user role from the database based on the username in the session
 $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
 checkUserRole($userRole);
 
-$query = "SELECT id FROM user WHERE username = '$username'";
-$result = mysqli_query($conn, $query);
 
-// Check if the query was successful
-if ($result) {
-    // Fetch the user ID from the result set
-    $row = mysqli_fetch_assoc($result);
-    $userId = $row['id'];
 
-    // Output the user ID (you can use it as needed)
-    
-} else {
-    // Handle the case when the query fails
-    echo "Error fetching user ID from the database.";
-}
+$userId = getLoggedInUserID($conn, $username);
+$selectedBookId = $_GET['id'];
+$selectedReviewId = $_GET['review_id'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ambil data yang dikirimkan dari form
-    $id_buku = htmlspecialchars($_POST["id_buku"]);
-    $id = $userId;
-    $ulasan = htmlspecialchars($_POST["ulasan"]);
-    $rating = intval($_POST["rating"]); // Mengonversi rating menjadi integer
 
-    // Validasi rating tidak boleh lebih dari 5
-    if ($rating > 5) {
-        $error_message = "Rating tidak boleh lebih dari 5.";
+
+
+// Fetch review details
+$queryReviewDetails = "SELECT * FROM ulasan_buku WHERE id = $selectedReviewId AND user = $userId";
+
+ // Add this line to dump the query details
+$resultReviewDetails = mysqli_query($conn, $queryReviewDetails);
+$reviewDetails = mysqli_fetch_assoc($resultReviewDetails);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST"){
+    $ulasan = htmlspecialchars($_POST['ulasan']);
+    $rating = htmlspecialchars($_POST['rating']);
+
+    $update = "UPDATE ulasan_buku SET ulasan = '$ulasan', rating = '$rating' WHERE id = $selectedReviewId";
+    $updateResult = mysqli_query($conn, $update);
+
+    if ($updateResult) {
+        // Pembaruan buku berhasil
+        header('location: lihat-ulasan.php?id='.$selectedBookId);
+        $success_message = "Pembaruan berhasil";
     } else {
-        // Lakukan penyimpanan ulasan dan rating ke database
-        $insert_review_query = "INSERT INTO ulasan_buku (buku, user, ulasan, rating, created_at) 
-                                VALUES ('$id_buku', '$id', '$ulasan', '$rating', current_timestamp())";
-
-        $insert_review_result = mysqli_query($conn, $insert_review_query);
-
-        if ($insert_review_result) {
-            // Setelah penyimpanan berhasil
-            $success_message = "Ulasan berhasil dikirim";
-        } else {
-            // Terdapat kesalahan saat query
-            $error_message = "Terjadi kesalahan. Ulasan dan rating tidak dapat disimpan.";
-        }
+        // Terdapat kesalahan saat query
+        $error_message = "Terjadi kesalahan. Silakan coba lagi.";
     }
+
 }
 
-// Ambil nilai id_buku dari URL
-$id_buku = isset($_GET['id']) ? $_GET['id'] : '';
-
-// Query untuk memeriksa apakah pengguna sudah meminjam buku tersebut
-$query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$id_buku'";
-$result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
-
-// Jika pengguna belum meminjam buku, redirect kembali ke halaman index
-if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
-    echo "<script>alert('Anda belum meminjam buku ini.'); window.location.href = 'index.php';</script>";
-    exit();
-}
 
 
 ?>
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -162,11 +133,12 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
                  <div class="col-lg-3">
                             <?php
                             // Query untuk mendapatkan informasi buku
-                            $query_buku = "SELECT * FROM buku WHERE id = $id_buku";
+                            $query_buku = "SELECT * FROM buku WHERE id = $selectedBookId";
                             $result_buku = mysqli_query($conn, $query_buku);
-
+                            
                             if ($result_buku && mysqli_num_rows($result_buku) > 0) {
                                 $row_buku = mysqli_fetch_assoc($result_buku);
+                                
                                 ?>
                                 <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4">
                                     <img src="../dashboard/buku/cover/<?php echo $row_buku['cover']; ?>"
@@ -190,7 +162,7 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
                     <h1 class="h3 mb-0 text-gray-800">Ulasan dan Rating</h1>
                 
             
-                    <form class="user" method="POST" action="ulasan.php?id=<?= $id_buku;?>" enctype="multipart/form-data">
+                    <form class="user" method="POST" action="edit-review.php?id=<?= $selectedBookId ?>&review_id=<?= $selectedReviewId; ?>" enctype="multipart/form-data">
                     <!-- Tambahkan pesan sukses jika ada -->
                         <!-- Tambahkan pesan sukses jika ada -->
                         <?php if (isset($success_message)) { ?>
@@ -204,21 +176,21 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
                                 <?php echo $error_message; ?>
                             </div>
                         <?php } ?>
-                        <input type="hidden" name="id_buku" value="<?php echo $id_buku; ?>">
-                        <input type="hidden" name="nama_buku" value="<?php echo $nama_buku; ?>">
+                        <input type="hidden" name="id_buku" value="<?php echo $selectedBookId; ?>">
+
 
                         <div class="form-group">
                             <label for="ulasan">Ulasan:</label>
-                            <textarea class="form-control rounded" id="ulasan" name="ulasan" placeholder="Ulasan" required></textarea>
+                            <textarea class="form-control rounded" id="ulasan" name="ulasan" placeholder="Ulasan" required><?php echo $reviewDetails['ulasan']; ?></textarea>
                         </div>
                         <div class="form-group">
                             <label for="rating">Rating (1-5):</label>
-                            <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required>
+                            <input type="number" value="<?php echo $reviewDetails['rating']; ?>" class="form-control" id="rating" name="rating" min="1" max="5" required>
                         </div>
                         <button type="submit" class="btn btn-primary btn-user ">
                             Kirim Ulasan dan Rating
                         </button>
-                        <a href="lihat-ulasan.php?id=<?= $id_buku; ?>" class="btn btn-success btn-user ">
+                        <a href="lihat-ulasan.php?id=<?= $selectedBookId; ?>" class="btn btn-success btn-user ">
                             Lihat ulasan lain
                         </a>
                         

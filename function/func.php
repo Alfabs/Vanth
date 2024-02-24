@@ -4,8 +4,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 
-
-
 function getUserRole($conn, $username) {
     $userRole = '';  // Default value
 
@@ -28,11 +26,11 @@ function checkAdminRole($role) {
 }
 
 function dataBuku($role){
-    if ($role == "admin" || $role == "petugas") {
+    if ($role !== "peminjam") {
+
     } else {
         header("Location: blocked.php");
         exit();
-
     }
 }
 

@@ -198,7 +198,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                             <div class="col-lg-3 mb-4 searchable">
                                 <div class="card search-result">
                                     <img src="../dashboard/buku/cover/<?php echo $row['cover']; ?>"
-                                        style="width: 100%; height: 370px; object-fit: cover;"
+                                        style="width: 100%; height: 410px; object-fit: cover;"
                                         class="card-img-top img-fluid" alt="Cover Buku">
                                     <div class="card-body">
                                         <h5 class="card-title"><?php echo $row['judul']; ?></h5>
@@ -212,7 +212,9 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                                             <!-- Tampilkan tombol "Pinjam" jika buku tersedia -->
                                             <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' : 'btn-secondary'; ?>"><?= $buttonText; ?></a>
                                         <?php endif; ?>
-                                        <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
+                                        <?php if ($isBorrowed) : ?>
+                                            <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
+                                        <?php endif; ?>
                                         <a href="bookmark.php?id=<?= $row['id']; ?>&action=delete"
                                             class="btn btn-secondary" onclick="return confirmDelete()">
                                             <i class="fas fa-bookmark"></i></a>

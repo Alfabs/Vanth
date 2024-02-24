@@ -12,6 +12,8 @@ Aplikasi Perpustakaan Digital ini adalah aplikasi perpustakaan digital berbasis 
 - Memberi rating dan ulasan buku
 - Generate Laporan (PDF & Excel)
 - Lupa Password melalui email
+- Menghapus ulasan user peminjam sebagai admin
+- Mengubah dan menghapus ulasan yang dikirim sebagai user peminjam
 
 ## Get Started
 

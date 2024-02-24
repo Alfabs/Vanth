@@ -15,6 +15,8 @@ $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
 checkUserRole($userRole);
 
+
+
 // Check if a book ID is provided
 if (!isset($_GET['id'])) {
     // Redirect or handle the case when no book ID is provided
@@ -22,6 +24,7 @@ if (!isset($_GET['id'])) {
     exit();
 }
 
+$userId = getLoggedInUserID($conn, $username);
 $selectedBookId = $_GET['id'];
 
 // Fetch book details
@@ -40,7 +43,7 @@ if (!$bookDetails) {
 $reviewsPerPage = 2;
 $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($currentpage - 1) * $reviewsPerPage;
-$queryReviews = "SELECT user.nama_lengkap, ulasan_buku.ulasan, ulasan_buku.rating
+$queryReviews = "SELECT user.id, user.nama_lengkap, ulasan_buku.user, ulasan_buku.ulasan, ulasan_buku.rating, ulasan_buku.id
                  FROM ulasan_buku
                  INNER JOIN user ON ulasan_buku.user = user.id
                  WHERE ulasan_buku.buku = $selectedBookId
@@ -55,6 +58,19 @@ $totalReviews = $rowTotalReviews['total'];
 
 // Calculate total pages
 $totalPages = ceil($totalReviews / $reviewsPerPage);
+
+// Query untuk memeriksa apakah pengguna sudah meminjam buku tersebut
+$query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$selectedBookId'";
+$result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
+
+// Jika pengguna belum meminjam buku, redirect kembali ke halaman index
+if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
+    echo "<script>alert('Anda belum meminjam buku ini.'); window.location.href = 'index.php';</script>";
+    exit();
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -69,7 +85,8 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
     <meta name="author" content="">
 
     <title>Lihat Ulasan</title>
-
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <!-- Custom fonts for this template-->
     <link href="../dashboard/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -166,15 +183,33 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
                     <strong>Penerbit:</strong> <?= $bookDetails['penerbit']; ?>
                 </p>
                 <!-- Reviews Section -->
-                <?php while ($rowReview = mysqli_fetch_assoc($resultReviews)) : ?>
-                    <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.3);" class="card mb-4 ">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $rowReview['nama_lengkap']; ?></h5>
-                            <p class="card-text"><?= $rowReview['ulasan']; ?></p>
-                            <p class="card-text"><strong>Rating:</strong> <?= $rowReview['rating']; ?></p>
-                        </div>
+<?php while ($rowReview = mysqli_fetch_assoc($resultReviews)) : ?>
+    <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.3);" class="card mb-4 ">
+        <div class="card-body">
+            <!-- Check if the review belongs to the logged-in user -->
+            <?php if ($rowReview['user'] == $userId) : ?>
+                <!-- Edit and delete buttons -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="card-title"><?= $rowReview['nama_lengkap']; ?></h5>
+                    <div>
+                        <a href="edit-review.php?id=<?= $selectedBookId ?>&review_id=<?= $rowReview['id']; ?>" class="btn btn-sm btn-primary mr-2">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button data-review-id="<?= $rowReview['id']; ?>" data-book-id="<?= $selectedBookId; ?>" class="delete-review-btn btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
-                <?php endwhile; ?>
+                </div>
+            <?php else : ?>
+                <!-- Show user's name -->
+                <h5 class="card-title"><?= $rowReview['nama_lengkap']; ?></h5>
+            <?php endif; ?>
+            <p class="card-text"><?= $rowReview['ulasan']; ?></p>
+            <p class="card-text"><strong>Rating:</strong> <?= $rowReview['rating']; ?></p>
+        </div>
+    </div>
+<?php endwhile; ?>
+
                 <ul class="pagination justify-content-center">
                                 <?php if ($currentpage > 1) : ?>
                                     <li class="page-item">
@@ -265,11 +300,38 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
 
     <!-- Page level plugins -->
     <script src="../dashboard/vendor/chart.js/Chart.min.js"></script>
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!-- Page level custom scripts -->
     <script src="../dashboard/js/demo/chart-area-demo.js"></script>
     <script src="../dashboard/js/demo/chart-pie-demo.js"></script>
+    <script>
+    // Ketika tombol hapus diklik
+    $('.delete-review-btn').click(function() {
+        // Dapatkan ID ulasan yang akan dihapus
+        let reviewId = $(this).data('review-id');
+        let bookId = $(this).data('book-id');
 
+        // Tampilkan konfirmasi SweetAlert
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Ulasan akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            // Jika pengguna menekan tombol Ya, hapus
+            if (result.isConfirmed) {
+                // Redirect to delete_review.php with the review ID and book ID as parameters
+                window.location.href = 'delete-review.php?id='+ bookId +'&review_id=' + reviewId;
+            }
+        });
+    });
+</script>
 </body>
 
 </html>

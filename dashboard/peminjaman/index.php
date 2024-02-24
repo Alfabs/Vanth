@@ -378,22 +378,22 @@ $totalPages = ceil($totalResults / $limit);
 
                     </form>
 
-                        <table id="peminjamanTable" class="table table-hover">
+                        <table  id="peminjamanTable" class="table table-hover">
                             <thead>
-                                <tr>
+                                <tr class="text-center">
                                     <th>ID</th>
                                     <th>Cover</th>
                                     <th>Nama Buku</th>
-                                    <th>Nama Peminjam</th>
-                                    <th>Tanggal Peminjaman</th>
-                                    <th>Tanggal Pengembalian</th>
+                                    <th>Peminjam</th>
+                                    <th>Tgl Peminjaman</th>
+                                    <th>Tgl Pengembalian</th>
                                     <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th >Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <tr>
+                                    <tr class="text-center">
                                         <td><?= $row['id']; ?></td>
                                         <td><img src="../buku/cover/<?= $row['cover']; ?>" alt="Cover" style="max-width: 100px; max-height: 100px;"></td>
                                         <td><?= $row['judul_buku']; ?></td>
@@ -407,7 +407,7 @@ $totalPages = ceil($totalResults / $limit);
                                                 Belum Dikembalikan
                                             <?php endif; ?>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <a target="_blank" href="generate-peminjaman.php?id=<?= $row['id']; ?>" class="btn btn-success">Generate PDF</a>
                                         </td>
                                     </tr>

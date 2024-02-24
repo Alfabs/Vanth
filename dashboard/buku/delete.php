@@ -1,7 +1,7 @@
 <?php
 // Include file konfigurasi database
 include '../../config.php';
-include '../func/function.php';
+include '../../function/func.php';
 
 $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);

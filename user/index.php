@@ -258,9 +258,11 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         <?php if ($isBorrowed) : ?>
                                             <a href="balikin.php?id=<?= $row['id']; ?>&action=return" class="btn <?= $buttonClass; ?>"><?= $buttonText; ?></a>
                                         <?php else : ?>
-                                            <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' : 'btn-secondary'; ?>"><?= $buttonText; ?></a>
+                                            <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' :  'btn-secondary'; ?>"><?= $buttonText; ?></a>
                                         <?php endif; ?>
-                                        <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
+                                        <?php if ($isBorrowed) : ?>
+                                            <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
+                                        <?php endif; ?>
                                         <?php
                                         // Cek apakah buku sudah ada di koleksi pribadi user
                                         $checkQuery = "SELECT * FROM koleksi_pribadi WHERE user = (SELECT id FROM user WHERE username = '$username') AND buku = {$row['id']}";
@@ -268,11 +270,11 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
 
                                         if (mysqli_num_rows($checkResult) > 0) :?>
                                             <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="btn btn-secondary" onclick="return confirmDelete()">
-                                                <i class="fas fa-bookmark"></i>
+                                                <i class="fas fa-solid fa-heart "></i>
                                             </a>
                                         <?php else : ?>
                                             <a href="index.php?id=<?= $row['id']; ?>&action=add" class="btn btn-secondary">
-                                                <i class="far fa-bookmark"></i>
+                                                <i class="far fa-regular fa-heart"></i>
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -298,47 +300,53 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         <!-- Filter buttons -->
                         <!-- Message for no search results -->
                         <?php while ($row = mysqli_fetch_assoc($result)) :
-                            $checkQuery = "SELECT * FROM koleksi_pribadi WHERE user = (SELECT id FROM user WHERE username = '$username') AND buku = {$row['id']}";
-                            $checkResult = mysqli_query($conn, $checkQuery);
+                        $checkQuery = "SELECT * FROM koleksi_pribadi WHERE user = (SELECT id FROM user WHERE username = '$username') AND buku = {$row['id']}";
+                        $checkResult = mysqli_query($conn, $checkQuery);
 
-                            // Cek apakah buku sedang dipinjam
-                            $isBorrowed = isset($peminjaman[$row['id']]) && $peminjaman[$row['id']]['status_peminjaman'] === 'Dipinjam';
+                        // Cek apakah buku sedang dipinjam
+                        $isBorrowed = isset($peminjaman[$row['id']]) && $peminjaman[$row['id']]['status_peminjaman'] === 'Dipinjam';
 
-                            // Tentukan apakah tombol "Pinjam" atau "Kembalikan" yang harus ditampilkan
-                            $buttonText = $isBorrowed ? 'Kembalikan' : 'Pinjam';
-                            $buttonClass = $isBorrowed ? 'btn-danger' : 'btn-primary';?>
-                            <div class="col-lg-3 mb-3 searchable" data-category-id="<?php echo $row['kategori_id']; ?>">
-                                <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card search-result">
-                                    <img src="../dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
-                                    <div class="card-body">
-                                        <h5 class="font-weight-bold card-title"><?php echo $row['judul']; ?></h5>
-                                        <p class="card-text"><?php echo $row['penulis']; ?></p>
-                                        <p class="card-text"><?php echo $row['penerbit']; ?></p>
-                                        <p class="card-text">Tahun Terbit: <?php echo $row['tahun_terbit']; ?></p>
-                                        <?php if ($isBorrowed) : ?>
-                                            <!-- Tampilkan tombol "Kembalikan" jika buku sedang dipinjam -->
-                                            <a href="balikin.php?id=<?= $row['id']; ?>&action=return" class="btn <?= $buttonClass; ?>"><?= $buttonText; ?></a>
-                                        <?php else : ?>
-                                            <!-- Tampilkan tombol "Pinjam" jika buku tersedia -->
-                                            <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' : 'btn-secondary'; ?>"><?= $buttonText; ?></a>
-                                        <?php endif; ?>
+                        // Tentukan apakah tombol "Pinjam" atau "Kembalikan" yang harus ditampilkan
+                        $buttonText = $isBorrowed ? 'Kembalikan' : 'Pinjam';
+                        $buttonClass = $isBorrowed ? 'btn-danger' : 'btn-primary'; ?>
+                        <div class="col-lg-3 mb-3 recommendation">
+                            <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card search-result">
+                                <img src="../dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
+                                <div class="card-body">
+                                    <h5 class="font-weight-bold card-title"><?php echo $row['judul']; ?></h5>
+                                    <p class="card-text"><?php echo $row['penulis']; ?></p>
+                                    <p class="card-text"><?php echo $row['penerbit']; ?></p>
+                                    <p class="card-text">Tahun Terbit: <?php echo $row['tahun_terbit']; ?></p>
+                                    <!-- Tombol Pinjam/Kembalikan -->
+                                    <?php if ($isBorrowed) : ?>
+                                        <a href="balikin.php?id=<?= $row['id']; ?>&action=return" class="btn <?= $buttonClass; ?>"><?= $buttonText; ?></a>
+                                    <?php else : ?>
+                                        <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' :  'btn-secondary'; ?>"><?= $buttonText; ?></a>
+                                    <?php endif; ?>
+                                    <!-- Tombol Ulasan (hanya muncul jika buku sedang dipinjam) -->
+                                    <?php if ($isBorrowed) : ?>
                                         <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
-                                        <?php
-                                            // Cek apakah buku sudah ada di koleksi pribadi user
-                                            $checkQuery = "SELECT * FROM koleksi_pribadi WHERE user = (SELECT id FROM user WHERE username = '$username') AND buku = {$row['id']}";
-                                            $checkResult = mysqli_query($conn, $checkQuery);
+                                    <?php endif; ?>
+                                    <!-- Tombol Bookmark -->
+                                    <?php
+                                    // Cek apakah buku sudah ada di koleksi pribadi user
+                                    $checkQuery = "SELECT * FROM koleksi_pribadi WHERE user = (SELECT id FROM user WHERE username = '$username') AND buku = {$row['id']}";
+                                    $checkResult = mysqli_query($conn, $checkQuery);
 
-                                            if (mysqli_num_rows($checkResult) > 0) :?>
-                                                <a href="index.php?id=<?=$row['id'];?>&action=delete" class="btn btn-secondary" onclick="return confirmDelete()">
-                                                <i class="fas fa-bookmark"></i></a>
-                                            <?php else :?>
-                                                <a href="index.php?id=<?=$row['id'];?>&action=add" class="btn btn-secondary">
-                                                <i class="far fa-bookmark"></i></a>
-                                            <?php endif;?>
-                                    </div>
+                                    if (mysqli_num_rows($checkResult) > 0) :?>
+                                        <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="btn btn-secondary" onclick="return confirmDelete()">
+                                            <i class="fas fa-solid fa-heart"></i>
+                                        </a>
+                                    <?php else : ?>
+                                        <a href="index.php?id=<?= $row['id']; ?>&action=add" class="btn btn-secondary">
+                                            <i class="far fa-regular fa-heart"></i>
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                        <?php endwhile;?>
+                        </div>
+                    <?php endwhile; ?>
+
                     </div>
 
                     

@@ -54,7 +54,7 @@ if (!$bookDetails) {
     $offset = ($currentPage - 1) * $reviewsPerPage;
 
     // Query untuk mengambil ulasan per halaman
-    $queryReviews = "SELECT user.nama_lengkap, ulasan_buku.ulasan, ulasan_buku.rating
+    $queryReviews = "SELECT user.nama_lengkap, ulasan_buku.ulasan, ulasan_buku.rating, ulasan_buku.id
                      FROM ulasan_buku
                      INNER JOIN user ON ulasan_buku.user = user.id
                      WHERE ulasan_buku.buku = $selectedBookId
@@ -327,14 +327,20 @@ if (!$bookDetails) {
         <div class="row">
             <div class="col-lg-8">
                 <?php while ($rowReview = mysqli_fetch_assoc($resultReviews)) : ?>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $rowReview['nama_lengkap']; ?></h5>
-                            <p class="card-text"><?= $rowReview['ulasan']; ?></p>
-                            <p class="card-text"><strong>Rating:</strong> <?= $rowReview['rating']; ?></p>
-                        </div>
+                <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4">
+                    <div class="card-body">
+                        <!-- Menampilkan tombol hapus jika pengguna adalah admin -->
+                        <?php if ($userRole === "admin") : ?>
+                            <!-- Tombol hapus -->
+                            <button class="btn btn-danger delete-review-btn" data-review-id="<?= $rowReview['id']; ?>" style="position: absolute; right: 10px; top: 10px;"><i class="fas fa-trash"></i></button>
+                        <?php endif; ?>
+                        <h5 class="card-title"><?= $rowReview['nama_lengkap']; ?></h5>
+                        <p class="card-text"><?= $rowReview['ulasan']; ?></p>
+                        <p class="card-text"><strong>Rating:</strong> <?= $rowReview['rating']; ?></p>
                     </div>
+                </div>
                 <?php endwhile; ?>
+
                 <!-- Pagination -->
         <ul class="pagination justify-content-center">
             <!-- Tombol Previous -->
@@ -430,7 +436,31 @@ if (!$bookDetails) {
     <script src="../js/demo/chart-area-demo.js"></script>
     <script src="../js/demo/chart-pie-demo.js"></script>
 
+    <script>
+        // Ketika tombol hapus diklik
+        $('.delete-review-btn').click(function() {
+            // Dapatkan ID ulasan yang akan dihapus
+            let reviewId = $(this).data('review-id');
 
+            // Tampilkan konfirmasi SweetAlert
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Ulasan akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                // Jika pengguna menekan tombol Ya, hapus
+                if (result.isConfirmed) {
+                    // Redirect to delete_review.php with the review ID as parameter
+                    window.location.href = 'delete_review.php?id=' + reviewId;
+                }
+            });
+        });
+    </script>
 </script>
 
 </body>
