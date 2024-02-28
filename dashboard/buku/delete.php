@@ -1,5 +1,7 @@
 <?php
 // Include file konfigurasi database
+session_start();
+
 include '../../config.php';
 include '../../function/func.php';
 
@@ -35,7 +37,8 @@ if (isset($_GET['id'])) {
         if ($delete_result && $delete_reviews_result) {
             // Redirect kembali ke halaman buku setelah menghapus
             header("Location: index.php");
-            exit();
+            $_SESSION['success'] = "Buku Berhasil Dihapus";
+
         } else {
             echo "Gagal menghapus buku atau ulasan buku.";
         }

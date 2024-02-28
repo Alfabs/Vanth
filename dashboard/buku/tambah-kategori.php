@@ -37,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($insert_kategori_result) {
         // Setelah penyimpanan berhasil
         header('location: index.php');
+        $_SESSION['success'] = "Penambahan Kategori Berhasil";
     } else {
         // Terdapat kesalahan saat query
         $error_message = "Terjadi kesalahan. Ulasan dan rating tidak dapat disimpan.";

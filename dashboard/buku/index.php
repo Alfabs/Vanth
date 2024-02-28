@@ -331,77 +331,81 @@ $total_pages = ceil($total_books / $limit);
               <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
                     <h1 class="h3 mb-3 text-gray-800">Buku</h1>
-					
                     <a href="tambah-buku.php" class="mb-4 btn btn-primary">Tambah Buku</a>
                     <a href="tambah-kategori.php" class="mb-4 btn btn-primary">Tambah Kategori</a>
+                    <!-- Page Heading -->
 					
 						
 					<div class="row">
-    <div class="col-lg-10">
-        <table class="table table-hover" id="bookTable">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Cover</th>
-                    <th scope="col">Judul</th>
-                    <th scope="col">Pengarang</th>
-                    <th scope="col">Tahun Terbit</th>
-                    <th scope="col">Stok</th>
-                    <!-- Tambahkan kolom sesuai dengan struktur tabel buku -->
-                    <th style="text-align: center;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = mysqli_fetch_assoc($result)) :?>
-                    <tr>
-                        <td><?=$row['id'];?></td>
-                        <td><img src="cover/<?=$row['cover'];?>" alt="Cover" style="max-width: 100px; max-height: 100px;"></td>
-                        <td><?=$row['judul'];?></td>
-                        <td><?=$row['penulis'];?></td>
-                        <td><?=$row['tahun_terbit'];?></td>
-                        <td><?=$row['stok'];?></td>
-                        <td class="text-center">
-                            <a class="badge badge-danger" onclick="return confirm('Yakin Mau Hapus buku?')" href="delete.php?id=<?=$row['id'];?>">Delete</a>
-                            <a class="badge badge-success" href="edit.php?id=<?=$row['id'];?>">Edit</a>
-                            <a class="badge badge-primary" href="detail.php?id=<?=$row['id'];?>">Detail</a>
-                        </td>
-                    </tr>
-                <?php endwhile;?>
-            </tbody>
-        </table>
-       <!-- Pagination -->
-<nav aria-label="Page navigation example">
-    <ul class="justify-content-center pagination">
-        <!-- Previous Page Button -->
-        <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
-            <a class="page-link" href="?page=<?= ($page <= 1) ? 1 : ($page - 1); ?>" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
+                            <?php if(isset($_SESSION['success'])) { ;?>
+                            <div class="col-lg-7 alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
+                            <?php   
+                                unset($_SESSION['success']);
+                            } ;?>
+                        <div class="col-lg-10">
+                            <table class="table table-hover" id="bookTable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Cover</th>
+                                        <th scope="col">Judul</th>
+                                        <th scope="col">Pengarang</th>
+                                        <th scope="col">Tahun Terbit</th>
+                                        <th scope="col">Stok</th>
+                                        <!-- Tambahkan kolom sesuai dengan struktur tabel buku -->
+                                        <th style="text-align: center;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php while ($row = mysqli_fetch_assoc($result)) :?>
+                                        <tr>
+                                            <td><?=$row['id'];?></td>
+                                            <td><img src="cover/<?=$row['cover'];?>" alt="Cover" style="max-width: 100px; max-height: 100px;"></td>
+                                            <td><?=$row['judul'];?></td>
+                                            <td><?=$row['penulis'];?></td>
+                                            <td><?=$row['tahun_terbit'];?></td>
+                                            <td><?=$row['stok'];?></td>
+                                            <td class="text-center">
+                                                <a class="badge badge-danger" onclick="return confirm('Yakin Mau Hapus buku?')" href="delete.php?id=<?=$row['id'];?>">Delete</a>
+                                                <a class="badge badge-success" href="edit.php?id=<?=$row['id'];?>">Edit</a>
+                                                <a class="badge badge-primary" href="detail.php?id=<?=$row['id'];?>">Detail</a>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile;?>
+                                </tbody>
+                            </table>
+                        <!-- Pagination -->
+                    <nav aria-label="Page navigation example">
+                        <ul class="justify-content-center pagination">
+                            <!-- Previous Page Button -->
+                            <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
+                                <a class="page-link" href="?page=<?= ($page <= 1) ? 1 : ($page - 1); ?>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
 
-        <!-- Page Buttons -->
-        <?php
-        $start_page = max(1, $page - 2);
-        $end_page = min($total_pages, $page + 2);
+                            <!-- Page Buttons -->
+                            <?php
+                            $start_page = max(1, $page - 2);
+                            $end_page = min($total_pages, $page + 2);
 
-        for ($i = $start_page; $i <= $end_page; $i++) :
-        ?>
-            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
-            </li>
-        <?php endfor; ?>
+                            for ($i = $start_page; $i <= $end_page; $i++) :
+                            ?>
+                                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
 
-        <!-- Next Page Button -->
-        <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
-            <a class="page-link" href="?page=<?= ($page >= $total_pages) ? $total_pages : ($page + 1); ?>" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav>
-<!-- End Pagination -->
+                            <!-- Next Page Button -->
+                            <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
+                                <a class="page-link" href="?page=<?= ($page >= $total_pages) ? $total_pages : ($page + 1); ?>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- End Pagination -->
 
     </div>
 </div>

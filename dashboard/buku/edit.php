@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($update_book_result) {
         // Pembaruan buku berhasil
         header('location: index.php');
-        $success_message = "Pembaruan berhasil";
+        $_SESSION['success'] = "Pembaruan berhasil";
     } else {
         // Terdapat kesalahan saat query
         $error_message = "Terjadi kesalahan. Silakan coba lagi.";

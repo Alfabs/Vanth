@@ -49,7 +49,8 @@ if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_ter
 
             // Eksekusi query dan tampilkan pesan sukses atau error
             if (mysqli_query($conn, $add_book_query)) {
-                $success_message = "Buku berhasil ditambahkan.";
+                header("Location: index.php");
+                $_SESSION['success'] = "Buku berhasil ditambahkan.";
             } else {
                 $error_message = "Error: " . mysqli_error($conn);
             }

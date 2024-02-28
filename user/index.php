@@ -273,11 +273,11 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         $checkResult = mysqli_query($conn, $checkQuery);
 
                                         if (mysqli_num_rows($checkResult) > 0) :?>
-                                            <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="btn btn-secondary" onclick="return confirmDelete()">
+                                            <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="bookmark-btn btn btn-secondary" onclick="return confirmDelete()">
                                                 <i class="fas fa-solid fa-heart "></i>
                                             </a>
                                         <?php else : ?>
-                                            <a href="index.php?id=<?= $row['id']; ?>&action=add" class="btn btn-secondary">
+                                            <a href="index.php?id=<?= $row['id']; ?>&action=add" class="bookmark-btn btn btn-secondary">
                                                 <i class="far fa-regular fa-heart"></i>
                                             </a>
                                         <?php endif; ?>
@@ -339,11 +339,11 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
 
                                     if (mysqli_num_rows($checkResult) > 0) :?>
                                         <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="btn btn-secondary" onclick="return confirmDelete()">
-                                            <i class="fas fa-solid fa-heart"></i>
+                                            <i class="fas fa-heart"></i>
                                         </a>
                                     <?php else : ?>
                                         <a href="index.php?id=<?= $row['id']; ?>&action=add" class="btn btn-secondary">
-                                            <i class="far fa-regular fa-heart"></i>
+                                            <i class="far fa-heart"></i>
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -448,13 +448,36 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
             }
         });
     });
-</script>
 
-<script>
+
     
+
 </script>
+<script>
+    $(document).ready(function() {
+        $(".bookmark-btn").click(function(e) {
+            e.preventDefault(); // Mencegah tindakan default dari tautan
 
+            var bookId = $(this).data('book-id'); // Mendapatkan ID buku dari atribut data
+            var action = $(this).data('action'); // Mendapatkan tindakan (add/delete)
 
+            // Kirim permintaan AJAX
+            $.ajax({
+                type: 'GET',
+                url: 'bookmark1.php', // Ganti dengan URL yang benar
+                data: { id: bookId, action: action },
+                success: function(response) {
+                    // Tampilkan pesan sukses atau lakukan tindakan lain yang sesuai
+                    alert(response); // Ganti dengan penanganan respons yang sesuai
+                },
+                error: function(xhr, status, error) {
+                    // Tampilkan pesan error atau lakukan tindakan lain yang sesuai
+                    alert('Terjadi kesalahan: ' + error);
+                }
+            });
+        });
+    });
+</script>
 
 
 <script>
