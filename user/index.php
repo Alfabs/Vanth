@@ -104,7 +104,8 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
     <meta name="author" content="">
 
     <title>Home</title>
-
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <link href="../dashboard/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -421,6 +422,8 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
     <!-- Page level custom scripts -->
     <script src="../dashboard/js/demo/chart-area-demo.js"></script>
     <script src="../dashboard/js/demo/chart-pie-demo.js"></script>
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <!-- Custom script for automatic search -->
 <script>
     $(document).ready(function(){

@@ -59,6 +59,13 @@ function getLoggedInUserID($conn, $username) {
     return $userId;
 }
 
+// Fungsi untuk menghitung jumlah peminjaman yang sudah dilakukan oleh pengguna
+function countUserBorrowedBooks($conn, $userId) {
+    $countQuery = "SELECT COUNT(*) AS total FROM peminjaman WHERE user = $userId AND status_peminjaman = 'Dipinjam'";
+    $result = mysqli_query($conn, $countQuery);
+    $data = mysqli_fetch_assoc($result);
+    return $data['total'];
+}
 
 function sendResetPasswordEmail($email, $reset_code) {
     // Kirim email menggunakan PHPMailer

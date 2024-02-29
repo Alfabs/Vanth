@@ -14,6 +14,8 @@ Aplikasi Perpustakaan Digital ini adalah aplikasi perpustakaan digital berbasis 
 - Lupa Password melalui email
 - Menghapus ulasan user peminjam sebagai admin
 - Mengubah dan menghapus ulasan yang dikirim sebagai user peminjam
+- Responsive Page untuk peminjam
+
 
 ## Get Started
 
