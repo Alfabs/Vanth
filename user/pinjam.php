@@ -14,9 +14,24 @@ $userRole = getUserRole($conn, $username);
 $userId = getLoggedInUserID($conn, $username);
 checkUserRole($userRole);
 
+// Fungsi untuk menghitung jumlah peminjaman yang sudah dilakukan oleh pengguna
+function countUserBorrowedBooks($conn, $userId) {
+    $countQuery = "SELECT COUNT(*) AS total FROM peminjaman WHERE user = $userId AND status_peminjaman = 'Dipinjam'";
+    $result = mysqli_query($conn, $countQuery);
+    $data = mysqli_fetch_assoc($result);
+    return $data['total'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $bookId = $_GET['id'];
     $userId = $userId;
+    
+    // Periksa apakah pengguna telah mencapai batas maksimal peminjaman (3)
+    $borrowedBooksCount = countUserBorrowedBooks($conn, $userId);
+    if ($borrowedBooksCount >= 3) {
+        echo "Anda telah mencapai batas maksimal peminjaman (3).";
+        exit();
+    }
     
     // Masukkan tanggal peminjaman (hari ini)
     $tanggalPeminjaman = date('Y-m-d');

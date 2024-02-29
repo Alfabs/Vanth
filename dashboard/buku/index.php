@@ -339,7 +339,7 @@ $total_pages = ceil($total_books / $limit);
 						
 					<div class="row">
                             <?php if(isset($_SESSION['success'])) { ;?>
-                            <div class="col-lg-7 alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
+                            <div class="col-lg-5 alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
                             <?php   
                                 unset($_SESSION['success']);
                             } ;?>
@@ -367,7 +367,7 @@ $total_pages = ceil($total_books / $limit);
                                             <td><?=$row['tahun_terbit'];?></td>
                                             <td><?=$row['stok'];?></td>
                                             <td class="text-center">
-                                                <a class="badge badge-danger" onclick="return confirm('Yakin Mau Hapus buku?')" href="delete.php?id=<?=$row['id'];?>">Delete</a>
+                                                <a style="cursor: pointer;" data-buku-id="<?= $row['id'];?>" class="delete-review-btn badge badge-danger">Delete</a>
                                                 <a class="badge badge-success" href="edit.php?id=<?=$row['id'];?>">Edit</a>
                                                 <a class="badge badge-primary" href="detail.php?id=<?=$row['id'];?>">Detail</a>
                                             </td>
@@ -489,7 +489,32 @@ $total_pages = ceil($total_books / $limit);
         }
 
     </script>
+    <script>
+        // Ketika tombol hapus diklik
+        $('.delete-review-btn').click(function() {
+            // Dapatkan ID ulasan yang akan dihapus
 
+            let bukuId = $(this).data('buku-id');
+
+            // Tampilkan konfirmasi SweetAlert
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Buku akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                // Jika pengguna menekan tombol Ya, hapus
+                if (result.isConfirmed) {
+                    // Redirect to delete_review.php with the review ID as parameter
+                    window.location.href = 'delete.php?id=' + bukuId;
+                }
+            });
+        });
+    </script>
 
 </script>
 

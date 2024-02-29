@@ -10,6 +10,7 @@ $sql = "SELECT b.judul, b.cover, b.penerbit, AVG(ub.rating) AS avg_rating
 
 $result = mysqli_query($conn, $sql);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

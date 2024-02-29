@@ -1,5 +1,6 @@
 <?php
 // Include library PHPMailer
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -12,63 +13,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ambil email dari form
     $email = $_POST['email'];
 
-    // Periksa apakah email sudah ada di tabel reset_password
-    $check_email_query = "SELECT * FROM reset_password WHERE email = '$email'";
+    // Periksa apakah email sudah ada di tabel user
+    $check_email_query = "SELECT * FROM user WHERE email = '$email'";
     $check_email_result = $conn->query($check_email_query);
 
     if ($check_email_result->num_rows > 0) {
-        // Email sudah ada di tabel reset_password, update reset_code
+        // Email sudah ada di tabel user, lanjutkan proses reset password
 
-        // Generate reset code
-        $reset_code = '';
+        // Periksa apakah email sudah ada di tabel reset_password
+        $check_reset_email_query = "SELECT * FROM reset_password WHERE email = '$email'";
+        $check_reset_email_result = $conn->query($check_reset_email_query);
 
-        // Menghasilkan 6 karakter acak
-        for ($i = 0; $i < 6; $i++) {
-            $reset_code .= rand(0, 9); // Menghasilkan angka acak dari 0 hingga 9
-        }
+        if ($check_reset_email_result->num_rows > 0) {
+            // Email sudah ada di tabel reset_password, update reset_code
 
-        // Update reset code di database
-        $update_reset_code_query = "UPDATE reset_password SET reset_code = '$reset_code' WHERE email = '$email'";
-        if ($conn->query($update_reset_code_query) === TRUE) {
-            // Kirim email menggunakan fungsi sendResetPasswordEmail
-            if (sendResetPasswordEmail($email, $reset_code)) {
-                // Redirect ke halaman reset password dengan mengirim email sebagai parameter
-                header('location: reset/reset_password.php?email=' . urlencode($email));
+            // Generate reset code
+            $reset_code = '';
+
+            // Menghasilkan 6 karakter acak
+            for ($i = 0; $i < 6; $i++) {
+                $reset_code .= rand(0, 9); // Menghasilkan angka acak dari 0 hingga 9
+            }
+
+            // Update reset code di database
+            $update_reset_code_query = "UPDATE reset_password SET reset_code = '$reset_code' WHERE email = '$email'";
+            if ($conn->query($update_reset_code_query) === TRUE) {
+                // Kirim email menggunakan fungsi sendResetPasswordEmail
+                if (sendResetPasswordEmail($email, $reset_code)) {
+                    // Redirect ke halaman reset password dengan mengirim email sebagai parameter
+                    header('location: reset/reset_password.php?email=' . urlencode($email));
+                    $_SESSION['success'] = "Code Reset Password sudah dikirim";
+                } else {
+                    // Jika gagal mengirim email, tampilkan pesan error
+                    $error_message = "Failed to send reset password email.";
+                }
             } else {
-                // Jika gagal mengirim email, tampilkan pesan error
-                $error_message = "Failed to send reset password email.";
+                // Redirect atau tampilkan pesan error
+                echo "Error updating reset code: " . $conn->error;
             }
         } else {
-            // Redirect atau tampilkan pesan error
-            echo "Error updating reset code: " . $conn->error;
+            // Email belum ada di tabel reset_password, tambahkan data baru
+
+            // Generate reset code
+            $reset_code = '';
+
+            // Menghasilkan 6 karakter acak
+            for ($i = 0; $i < 6; $i++) {
+                $reset_code .= rand(0, 9); // Menghasilkan angka acak dari 0 hingga 9
+            }
+
+            // Simpan reset code ke database
+            $sql = "INSERT INTO reset_password (email, reset_code) VALUES ('$email', '$reset_code')";
+
+            if ($conn->query($sql) === TRUE) {
+                // Kirim email menggunakan fungsi sendResetPasswordEmail
+                if (sendResetPasswordEmail($email, $reset_code)) {
+                    // Redirect ke halaman reset password dengan mengirim email sebagai parameter
+                    header('location: reset/reset_password.php?email=' . urlencode($email));
+                    $_SESSION['success'] = "Code Reset Password sudah dikirim";
+                } else {
+                    // Jika gagal mengirim email, tampilkan pesan error
+                    $error_message = "Failed to send reset password email.";
+                }
+            } else {
+                // Redirect atau tampilkan pesan error
+                echo "Error: " . $sql . "<br>" . $conn->error;
+            }
         }
     } else {
-        // Email belum ada di tabel reset_password, tambahkan data baru
-
-        // Generate reset code
-        $reset_code = '';
-
-        // Menghasilkan 6 karakter acak
-        for ($i = 0; $i < 6; $i++) {
-            $reset_code .= rand(0, 9); // Menghasilkan angka acak dari 0 hingga 9
-        }
-
-        // Simpan reset code ke database
-        $sql = "INSERT INTO reset_password (email, reset_code) VALUES ('$email', '$reset_code')";
-
-        if ($conn->query($sql) === TRUE) {
-            // Kirim email menggunakan fungsi sendResetPasswordEmail
-            if (sendResetPasswordEmail($email, $reset_code)) {
-                // Redirect ke halaman reset password dengan mengirim email sebagai parameter
-                header('location: reset/reset_password.php?email=' . urlencode($email));
-            } else {
-                // Jika gagal mengirim email, tampilkan pesan error
-                $error_message = "Failed to send reset password email.";
-            }
-        } else {
-            // Redirect atau tampilkan pesan error
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
+        // Email tidak terdaftar di tabel user
+        $error_message = "Email ini tidak terdaftar.";
     }
 
     $conn->close();

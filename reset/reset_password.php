@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         // Jika kode reset cocok, arahkan pengguna ke halaman untuk mengatur password baru
         header('location: set_new_password.php?email=' . $email);
+        $_SESSION['success'] = "Code Reset Password Terverifikasi";
     } else {
         // Jika kode reset tidak cocok, tampilkan pesan kesalahan
         $_SESSION['wrong'] = "Reset Code salah, Coba masukkan lagi";
@@ -97,6 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             ?>
                                         </div>
                                     <?php } ?>
+
+                                    <?php if(isset($_SESSION['success'])) { ;?>
+                                    <div class="alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
+                                    <?php   
+                                        unset($_SESSION['success']);
+                                    } ;?>
                                 </div>
                                 <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                                     <input type="hidden" name="email" value="<?php echo $_GET['email']; ?>">

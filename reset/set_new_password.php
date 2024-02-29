@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Include file konfigurasi database
 include '../config.php';
 
@@ -96,6 +97,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <?php echo $message; ?>
                                         </div>
                                     <?php } ?>
+                                    <?php if(isset($_SESSION['success'])) { ;?>
+                                    <div class="alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
+                                    <?php   
+                                        unset($_SESSION['success']);
+                                    } ;?>
                                 </div>
                                 <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?email=' . $_GET['email']; ?>">
                                     <div class="form-group">

@@ -170,7 +170,7 @@ if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
                                 ?>
                                 <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4">
                                     <img src="../dashboard/buku/cover/<?php echo $row_buku['cover']; ?>"
-                                        class="card-img-top " style="width: 100%; height: 370px; object-fit: cover;" alt="Cover Buku">
+                                        class="card-img-top " style="width: 100%; height: 410px; object-fit: cover;" alt="Cover Buku">
                                     <div class="card-body">
                                         <h5 class="font-weight-bold card-title"><?php echo $row_buku['judul']; ?></h5>
                                         <p class="card-text">Penulis: <?php echo $row_buku['penulis']; ?></p>
