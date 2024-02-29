@@ -209,13 +209,17 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                                         <p class="card-text"><?php echo $row['penulis']; ?></p>
                                         <p class="card-text"><?php echo $row['penerbit']; ?></p>
                                         <p class="card-text">Tahun Terbit: <?php echo $row['tahun_terbit']; ?></p>
+                                        <!-- Tombol Pinjam/Kembalikan -->
                                         <?php if ($isBorrowed) : ?>
-                                            <!-- Tampilkan tombol "Kembalikan" jika buku sedang dipinjam -->
                                             <a href="balikin.php?id=<?= $row['id']; ?>&action=return" class="btn <?= $buttonClass; ?>"><?= $buttonText; ?></a>
                                         <?php else : ?>
-                                            <!-- Tampilkan tombol "Pinjam" jika buku tersedia -->
-                                            <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' : 'btn-secondary'; ?>"><?= $buttonText; ?></a>
+                                            <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' :  'btn-secondary'; ?>"><?= $buttonText; ?></a>
                                         <?php endif; ?>
+                                        <!-- Tombol Ulasan (hanya muncul jika buku tidak dipinjam) -->
+                                        <?php if (!$isBorrowed) : ?>
+                                            <a href="lihat-ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Lihat Ulasan</a>
+                                        <?php endif; ?>
+                                        <!-- Tombol Lihat Ulasan (hanya muncul jika buku sudah dipinjam) -->
                                         <?php if ($isBorrowed) : ?>
                                             <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
                                         <?php endif; ?>

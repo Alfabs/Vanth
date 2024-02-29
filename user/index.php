@@ -265,6 +265,11 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         <?php else : ?>
                                             <a href="<?= $row['stok'] > 0 ? 'pinjam.php?id=' . $row['id'] : '#'; ?>" class="btn <?= $row['stok'] > 0 ? 'btn-primary' :  'btn-secondary'; ?>"><?= $buttonText; ?></a>
                                         <?php endif; ?>
+                                        <!-- Tombol Ulasan (hanya muncul jika buku tidak dipinjam) -->
+                                        <?php if (!$isBorrowed) : ?>
+                                            <a href="lihat-ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Lihat Ulasan</a>
+                                        <?php endif; ?>
+                                        <!-- Tombol Lihat Ulasan (hanya muncul jika buku sudah dipinjam) -->
                                         <?php if ($isBorrowed) : ?>
                                             <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
                                         <?php endif; ?>
