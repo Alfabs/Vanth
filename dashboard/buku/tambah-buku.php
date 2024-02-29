@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $kategori_id = htmlspecialchars($_POST["kategori_id"]);
     $stok = htmlspecialchars($_POST["stok"]);
     $deskripsi = htmlspecialchars($_POST["deskripsi"]);
-    $tempat = htmlspecialchars($_POST["tempat"]);
+
 
     // Lakukan validasi dan penambahan buku
 if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_terbit) && !empty($kategori_id)) {
@@ -44,8 +44,8 @@ if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_ter
             // File cover berhasil diunggah, simpan data buku ke database
             $cover_filename = $cover['name'];
 
-        $add_book_query = "INSERT INTO `buku` (`perpus_id`, `judul`, `deskripsi`, `cover`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `tempat`, `kategori_id`, `created_at`)
-                               VALUES ('$perpus_id', '$judul', '$deskripsi', '$cover_filename', '$penulis', '$penerbit', '$tahun_terbit', '$stok', '$tempat', '$kategori_id',  current_timestamp())";
+        $add_book_query = "INSERT INTO `buku` (`perpus_id`, `judul`, `deskripsi`, `cover`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `kategori_id`, `created_at`)
+                           VALUES ('$perpus_id', '$judul', '$deskripsi', '$cover_filename', '$penulis', '$penerbit', '$tahun_terbit', '$stok', '$kategori_id',  current_timestamp())";
 
             // Eksekusi query dan tampilkan pesan sukses atau error
             if (mysqli_query($conn, $add_book_query)) {
@@ -363,9 +363,6 @@ if (mysqli_num_rows($result_kategori) > 0) {
         </div>
         <div class="form-group">
             <input type="text" class="form-control" id="judul" name="deskripsi" placeholder="Deskripsi" required>
-        </div>
-        <div class="form-group">
-            <input type="number" class="form-control" id="judul" name="tempat" placeholder="Tempat" required>
         </div>
         <div class="form-group">
             <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Penulis" required>

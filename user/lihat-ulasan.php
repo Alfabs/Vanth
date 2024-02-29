@@ -82,15 +82,15 @@ $totalReviews = $rowTotalReviews['total'];
 // Calculate total pages
 $totalPages = ceil($totalReviews / $reviewsPerPage);
 
-// Query to check if the user has borrowed the book
-$query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$selectedBookId'";
-$result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
+// // Query to check if the user has borrowed the book
+// $query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$selectedBookId' AND status_peminjaman = 'Dipinjam'";
+// $result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
 
-// If the user has not borrowed the book, redirect back to the index page
-if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
-    echo "<script>alert('Anda belum meminjam buku ini.'); window.location.href = 'index.php';</script>";
-    exit();
-}
+// // If the user has not borrowed the book, redirect back to the index page
+// if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
+//     echo "<script>alert('Anda belum meminjam buku ini.'); window.location.href = 'index.php';</script>";
+//     exit();
+// }
 ?>
 
 <!DOCTYPE html>

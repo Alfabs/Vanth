@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $kategori_id = htmlspecialchars($_POST["kategori_id"]);
     $stok = htmlspecialchars($_POST["stok"]);
     $deskripsi = htmlspecialchars($_POST["deskripsi"]);
-    $tempat = htmlspecialchars($_POST["tempat"]);
+
 
     // Proses unggah gambar baru jika ada
     if ($_FILES['cover']['name']) {
@@ -59,13 +59,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update_book_query = "UPDATE buku
                               SET judul = '$judul', deskripsi = '$deskripsi', penulis = '$penulis', penerbit = '$penerbit',
                                   tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id',
-                                  cover = '$cover_name', stok = '$stok', tempat = '$tempat'
+                                  cover = '$cover_name', stok = '$stok'
                               WHERE id = $id";
     } else {
         // Update data buku tanpa mengubah cover
         $update_book_query = "UPDATE buku
                               SET judul = '$judul', deskripsi = '$deskripsi', penulis = '$penulis', penerbit = '$penerbit',
-                                  tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id', stok = '$stok', tempat = '$tempat' 
+                                  tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id', stok = '$stok' 
                               WHERE id = $id";
     }
 
@@ -366,10 +366,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <label for="">Deskripsi :</label>
                     <input type="text" class="form-control" id="judul" name="deskripsi" placeholder="Deskripsi" required value="<?php echo $book_data['deskripsi']; ?>">
-                </div>
-                <div class="form-group">
-                    <label for="">Rak :</label>
-                    <input type="number" class="form-control" id="judul" name="tempat" placeholder="Tempat" required value="<?php echo $book_data['tempat']; ?>">
                 </div>
                 <div class="form-group">
                     <label for="">Penulis :</label>

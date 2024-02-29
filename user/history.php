@@ -16,13 +16,17 @@ checkUserRole($userRole);
 $userId = getLoggedInUserID($conn, $username);
 
 // Query untuk mengambil data peminjaman berdasarkan user
-$peminjamanQuery = "SELECT buku.id, buku.judul, buku.cover, buku.penulis, buku.penerbit, buku.tahun_terbit, peminjaman.tanggal_peminjaman, peminjaman.tanggal_pengembalian, peminjaman.status_peminjaman
+$peminjamanQuery = "SELECT buku.id, buku.kategori_id, buku.judul, buku.cover, buku.penulis, buku.penerbit, buku.tahun_terbit, peminjaman.tanggal_peminjaman, peminjaman.tanggal_pengembalian, peminjaman.status_peminjaman
                     FROM peminjaman
                     INNER JOIN buku ON peminjaman.buku = buku.id
-                    WHERE peminjaman.user = $userId AND peminjaman.status_peminjaman = 'Dikembalikan'";
+                    WHERE peminjaman.user = $userId AND peminjaman.status_peminjaman = 'Dipinjam'";
 
 // Eksekusi query
 $peminjamanResult = mysqli_query($conn, $peminjamanQuery);
+
+// Query to fetch book categories
+$categoryQuery = "SELECT id, nama_kategori FROM kategori_buku";
+$categoryResult = mysqli_query($conn, $categoryQuery);
 
 ?>
 
@@ -149,6 +153,10 @@ $peminjamanResult = mysqli_query($conn, $peminjamanQuery);
                                     <i class="far fa-solid fa-heart fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Bookmark
                                 </a>
+                                <a class="dropdown-item" href="history.php">
+                                    <i class="fas fa-history fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    History
+                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -171,8 +179,16 @@ $peminjamanResult = mysqli_query($conn, $peminjamanQuery);
                     
                     <h1 style="margin-top: 90px;" class="h3 mb-4 text-gray-800 text-center">History Buku</h1>
                     <div class="row justify-content-center">
+                        <div class=" mb-4">
+                            <button type="button" class="btn btn-primary" onclick="filterBooks(null)">All</button>
+                            <?php while ($category = mysqli_fetch_assoc($categoryResult)) : ?>
+                                <button type="button" class="btn btn-primary" onclick="filterBooks(<?php echo $category['id']; ?>)"><?php echo $category['nama_kategori']; ?></button>
+                            <?php endwhile; ?>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
                         <?php while ($row = mysqli_fetch_assoc($peminjamanResult)) : ?>
-                            <div class="searchable card mb-3" style="max-width: 800px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.4);">
+                            <div class="searchable card mb-3" data-category-id="<?php echo $row['kategori_id']; ?>" style=" max-width: 800px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.4);">
                                 <div class="row no-gutters">
                                     <div class="col-md-4">
                                         <img src="../dashboard/buku/cover/<?= $row['cover'];?>" class="card-img" alt="...">

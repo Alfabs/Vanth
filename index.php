@@ -64,7 +64,7 @@ $result = mysqli_query($conn, $sql);
                 <div class="col-md-6 text-center">
                     <div class="mt-5 text-center">
                         <h1>Perpustakaan Digital</h1>
-                        <p>Tempat dimana anda bisa menyimpan buku buku yang anda inginkan</p>
+                        <p>Tempat dimana anda bisa membaca buku buku yang anda inginkan</p>
                         <a href="login.php" class="btn btn-primary btn-lg">Get Started</a>
                     </div>
                 </div>
@@ -81,7 +81,7 @@ $result = mysqli_query($conn, $sql);
     <!-- Featured Books Section -->
     <section class="featured-books py-5">
         <div class="mt-5 container">
-            <h2 class="text-center mb-4">Rekomendasi Buku</h2>
+            <h2 class="text-center mb-4">Buku Rating Tinggi</h2>
             <div class="row">
                 <?php
                 while ($row = mysqli_fetch_assoc($result)) {

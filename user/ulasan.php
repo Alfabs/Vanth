@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $id_buku = isset($_GET['id']) ? $_GET['id'] : '';
 
 // Query untuk memeriksa apakah pengguna sudah meminjam buku tersebut
-$query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$id_buku'";
+$query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$id_buku' AND status_peminjaman = 'Dipinjam'";
 $result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
 
 // Jika pengguna belum meminjam buku, redirect kembali ke halaman index

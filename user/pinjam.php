@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id'])) {
     $tanggalPeminjaman = date('Y-m-d');
 
     // Set tanggal pengembalian default menjadi 0
-    $tanggalPengembalian = '0000-00-00';
+    $tanggalPengembalian = date('Y-m-d', strtotime('+5 days'));;
 
     // Cek stok buku sebelum melakukan peminjaman
     $getBookQuery = "SELECT stok FROM buku WHERE id = $bookId";

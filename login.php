@@ -82,19 +82,21 @@ if (isset($_SESSION['username'])) {
                                         <input type="password" class="form-control form-control-user"
                                             id="exampleInputPassword" name="password" placeholder="Password" required>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">    
-                                            <a href="check.php" class="" for="customCheck">Lupa Password?</a>
-                                        </div>
-                                        <div class="custom-control custom-checkbox small">    
-                                            <a href="registrasi.php" class="" for="customCheck">Daftar akun peminjam?</a>
-                                        </div>
-                                    </div>
+
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
                                         Login
                                     </button>
                                     <hr>
                                 </form>
+                                <!-- Link untuk lupa password dan daftar akun -->
+                                <div class="text-center">
+                                    <div class="small">
+                                        <a href="check.php" class="" for="customCheck">Lupa Password?</a>
+                                    </div>
+                                    <div class="small">
+                                        <a href="registrasi.php" class="" for="customCheck">Tidak Punya Akun? Daftar</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

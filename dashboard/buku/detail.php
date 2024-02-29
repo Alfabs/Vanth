@@ -304,7 +304,6 @@ $result = mysqli_query($conn, $query);
                                         <h5 class="card-title font-weight-bold">Judul : <?=$row['judul'];?></h5>
                                         <p class="card-text">Penulis : <?=$row['penulis'];?></p>
                                         <p class="card-text">Tahun Terbit : <?=$row['tahun_terbit'];?></p>
-                                        <p class="card-text">Rak ke : <?=$row['tempat'];?></p>
                                         <p class="card-text">Deskripsi : <br><?=$row['deskripsi'];?></p>
                                     </div>
                                     </div>
