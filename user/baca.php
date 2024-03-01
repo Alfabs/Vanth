@@ -3,7 +3,6 @@ session_start();
 
 // Include necessary configuration and function files
 include '../config.php';
-include '../function/func.php';
 
 // Ensure user has logged in
 if (!isset($_SESSION['username'])) {
@@ -11,14 +10,31 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
+$bookId = $_GET['id'];
 $username = $_SESSION['username'];
-$userRole = getUserRole($conn, $username);
-checkUserRole($userRole);
+
+$query = "SELECT id FROM user WHERE username = '$username'";
+$result = mysqli_query($conn, $query);
+
+$row = mysqli_fetch_assoc($result);
+$userId = $row['id'];
+
+
+
+// Query untuk memeriksa apakah pengguna sudah meminjam buku tersebut
+$query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$bookId' AND status_peminjaman = 'Dipinjam'";
+$result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
+
+// Jika pengguna belum meminjam buku, redirect kembali ke halaman index
+if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
+    echo "<script>alert('Anda belum meminjam buku ini.'); window.location.href = 'index.php';</script>";
+    exit();
+}
 
 // Check if the request method is GET
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
-        $bookId = $_GET['id'];
+
 
         // Query to get book information
         $bookQuery = "SELECT * FROM buku WHERE id = $bookId";
@@ -32,13 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // Ensure the PDF file exists
             if (file_exists($pdfPath)) {
                 // Set headers to display the PDF inline
-                header('Content-Type: application/pdf');
-                header('Content-Disposition: inline; filename="' . $bookData['judul'] . '.pdf"');
-                header('Content-Transfer-Encoding: binary');
-                header('Accept-Ranges: bytes');
+                header('Content-Type: text/html'); // Set content type to HTML
 
-                // Read and output the PDF file
-                @readfile($pdfPath);
+                // Output HTML and JavaScript to embed PDF
+                include 'readbook.php';
                 exit();
             } else {
                 // If the PDF file is not found, show an error message
@@ -60,4 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     echo "Metode yang diterima hanya GET.";
     exit();
 }
+
+
 ?>

@@ -373,7 +373,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php if (isset($error_message)) { ?>
                     <div class="alert alert-danger" role="alert">
                         <?php echo $error_message; ?>
-                    </div>reviewva
+                    </div>
                 <?php } ?>
                 <div class="form-group">
                     <label for="">Judul :</label>
