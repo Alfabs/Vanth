@@ -92,6 +92,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+    <a href="login.php" class="btn-back" style="position: absolute; top: 10px; left: 10px; z-index: 999;">
+        <span class="btn btn-primary btn-user btn-block">
+            <i class="fas fa-chevron-left"></i>
+        </span>
+    </a>
     <div class="container">
         <div class="col-xl-10 col-lg-12 col-md-9">
             <div class="card o-hidden border-0 shadow-lg my-5">

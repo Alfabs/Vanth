@@ -148,7 +148,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                     </div>
                     <div class="row mb-4">
                         <?php while ($row = mysqli_fetch_assoc($recommendationResult)) : ?>
-                            <div class="col-lg-3 mb-3 recommendation">
+                            <div  class="col-lg-3 recommendation">
                                 <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card search-result">
                                     <img src="dashboard/buku/cover/<?php echo $row['cover']; ?>" style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" alt="Cover Buku">
                                     <div class="card-body">
@@ -160,7 +160,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         <a href="user/pinjam.php?id=<?$row['id'];?>" class="btn btn-primary">Pinjam</a>
                                         <a href="user/ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
                                         <a class="btn btn-secondary" href="user/bookmark.php?id=<?= $row['id'];?>">
-                                            <i class="far fa-bookmark"></i>
+                                            <i class="far fa-heart"></i>
                                         </a>
 
                                     </div>
@@ -191,7 +191,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         <a class="btn btn-primary" href="user/pinjam.php?id=<?=$row['id'];?>">Pinjam</a>
                                         <a href="user/ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
                                         <a class="btn btn-secondary" href="user/bookmark.php?id=<?= $row['id'];?>">
-                                            <i class="far fa-bookmark"></i>
+                                            <i class="far fa-heart"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -206,12 +206,27 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
             </div>
             <!-- End of Main Content -->
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+            <footer style="box-shadow: 0 -7px 17px 0 rgba(0,0,0,0.4);" class="mt-5 footer bg-light text-center py-4 border-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="font-weight-bold">Tentang Kami</h5>
+                            <p>Aplikasi perpustakaan digital ini adalah Aplikasi berbasis website 
+                                untuk membaca buku secara online dan menyimpan buku secara online</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5  class="font-weight-bold">Contact Us</h5>
+                            <p>Email: aivoice725@gmail.com<br>Phone: +1234567890</p>
+                        </div>
+                        <div class="col-md-4">
+                                <h5  class="font-weight-bold">Account</h5>
+                                <a href="registrasi.php" class="btn btn-outline-primary me-2">Sign Up</a>
+                                <a href="login.php" class="btn btn-primary">Login</a>
+                        </div>   
                     </div>
+                </div>
+                <div class="container mt-3">
+                    <p>&copy; 2024 Your Website. All rights reserved.</p>
                 </div>
             </footer>
             <!-- End of Footer -->

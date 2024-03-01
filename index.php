@@ -23,8 +23,7 @@ $result = mysqli_query($conn, $sql);
     <link href="../dashboard/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -106,9 +105,30 @@ $result = mysqli_query($conn, $sql);
 
 
     <!-- Footer -->
-    <footer class="bg-white text-dark border-top text-center py-4">
+<footer style="box-shadow: 0 -7px 17px 0 rgba(0,0,0,0.4);" class="footer bg-light text-center py-4 border-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Tentang Kami</h5>
+                <p>Aplikasi perpustakaan digital ini adalah Aplikasi berbasis website 
+                    untuk membaca buku secara online dan menyimpan buku secara online</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p>Email: aivoice725@gmail.com<br>Phone: +1234567890</p>
+            </div>
+            <div class="col-md-4">
+                    <h5>Discover</h5>
+                    <a href="guest.php" class="btn btn-primary">Catalog</a>
+                    <a href="login.php" class="btn btn-outline-primary me-2">Login</a>
+            </div>   
+        </div>
+    </div>
+    <div class="container mt-3">
         <p>&copy; 2024 Your Website. All rights reserved.</p>
-    </footer>
+    </div>
+</footer>
+
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

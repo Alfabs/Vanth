@@ -52,7 +52,12 @@ if (isset($_SESSION['username'])) {
 </head>
 
 
-<body>
+<body>  
+    <a href="index.php" class="btn-back" style="position: absolute; top: 10px; left: 10px; z-index: 999;">
+        <span class="btn btn-primary btn-user btn-block">
+            <i class="fas fa-chevron-left"></i>
+        </span>
+    </a>
 
     <div class="container">
 
@@ -63,9 +68,10 @@ if (isset($_SESSION['username'])) {
                     <div class="row">
                         <div class="col-lg-10 mx-auto">
                             <div class="p-5">
-                                <div class="text-center">
+                                <div class="text-center">   
                                     <h1 class="h4 text-gray-900 mb-4">Login</h1>
                                 </div>
+                                
                                 <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                                     <!-- Tambahkan pesan error jika ada -->
                                     <?php if (isset($error_message)) { ?>
