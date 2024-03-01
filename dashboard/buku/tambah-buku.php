@@ -24,44 +24,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stok = htmlspecialchars($_POST["stok"]);
     $deskripsi = htmlspecialchars($_POST["deskripsi"]);
 
-
     // Lakukan validasi dan penambahan buku
-if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_terbit) && !empty($kategori_id)) {
-    // Query untuk memeriksa apakah buku sudah ada
-    $check_book_query = "SELECT * FROM `buku` WHERE `judul` = '$judul' AND `penulis` = '$penulis' AND `penerbit` = '$penerbit' AND `tahun_terbit` = '$tahun_terbit' AND `kategori_id` = '$kategori_id'";
-    $result_check_book = mysqli_query($conn, $check_book_query);
-    
-    if (mysqli_num_rows($result_check_book) > 0) {
-        // Buku sudah ada, tampilkan pesan error
-        $error_message = "Buku ini sudah ada.";
-    } else {
-        // Buku belum ada, lanjutkan dengan penambahan buku
-        $perpus_id = 0; 
-        $cover = $_FILES['cover'];
-        $cover_path = 'cover/';
-
-        if (move_uploaded_file($cover['tmp_name'], $cover_path . $cover['name'])) {
-            // File cover berhasil diunggah, simpan data buku ke database
-            $cover_filename = $cover['name'];
-
-        $add_book_query = "INSERT INTO `buku` (`perpus_id`, `judul`, `deskripsi`, `cover`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `kategori_id`, `created_at`)
-                           VALUES ('$perpus_id', '$judul', '$deskripsi', '$cover_filename', '$penulis', '$penerbit', '$tahun_terbit', '$stok', '$kategori_id',  current_timestamp())";
-
-            // Eksekusi query dan tampilkan pesan sukses atau error
-            if (mysqli_query($conn, $add_book_query)) {
-                header("Location: index.php");
-                $_SESSION['success'] = "Buku berhasil ditambahkan.";
-            } else {
-                $error_message = "Error: " . mysqli_error($conn);
-            }
+    if (!empty($judul) && !empty($penulis) && !empty($penerbit) && !empty($tahun_terbit) && !empty($kategori_id) && isset($_FILES['cover']) && isset($_FILES['pdf'])) {
+        // Query untuk memeriksa apakah buku sudah ada
+        $check_book_query = "SELECT * FROM `buku` WHERE `judul` = '$judul' AND `penulis` = '$penulis' AND `penerbit` = '$penerbit' AND `tahun_terbit` = '$tahun_terbit' AND `kategori_id` = '$kategori_id'";
+        $result_check_book = mysqli_query($conn, $check_book_query);
+        
+        if (mysqli_num_rows($result_check_book) > 0) {
+            // Buku sudah ada, tampilkan pesan error
+            $error_message = "Buku ini sudah ada.";
         } else {
-            $error_message = "Error uploading cover file.";
-        }
-    }
-} else {
-    $error_message = "Semua kolom harus diisi.";
-}
+            // Buku belum ada, lanjutkan dengan penambahan buku
+            $perpus_id = 0; 
+            $cover = $_FILES['cover'];
+            $pdf = $_FILES['pdf'];
+            $cover_path = 'cover/';
+            $pdf_path = 'pdf/';
 
+            if (move_uploaded_file($cover['tmp_name'], $cover_path . $cover['name']) && move_uploaded_file($pdf['tmp_name'], $pdf_path . $pdf['name'])) {
+                // File berhasil diunggah, simpan data buku ke database
+                $cover_filename = $cover['name'];
+                $pdf_filename = $pdf['name'];
+
+                $add_book_query = "INSERT INTO `buku` (`perpus_id`, `judul`, `deskripsi`, `cover`, `pdf`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `kategori_id`, `created_at`)
+                                   VALUES ('$perpus_id', '$judul', '$deskripsi', '$cover_filename', '$pdf_filename', '$penulis', '$penerbit', '$tahun_terbit', '$stok', '$kategori_id',  current_timestamp())";
+
+                // Eksekusi query dan tampilkan pesan sukses atau error
+                if (mysqli_query($conn, $add_book_query)) {
+                    header("Location: index.php");
+                    $_SESSION['success'] = "Buku berhasil ditambahkan.";
+                } else {
+                    $error_message = "Error: " . mysqli_error($conn);
+                }
+            } else {
+                $error_message = "Error uploading files.";
+            }
+        }
+    } else {
+        $error_message = "Semua kolom harus diisi dan file harus diunggah.";
+    }
 }
 
 // Query untuk mengambil data kategori buku dari database
@@ -79,26 +80,22 @@ if (mysqli_num_rows($result_kategori) > 0) {
 }
 ?>
 
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-    <meta charset="utf-8">
+<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dashboard</title>
+    <title>Tambah Buku</title>
 
     <!-- Custom fonts for this template-->
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -106,7 +103,6 @@ if (mysqli_num_rows($result_kategori) > 0) {
 
     <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
-
 
 </head>
 
@@ -373,6 +369,13 @@ if (mysqli_num_rows($result_kategori) > 0) {
         <div class="form-group">
             <input type="text" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Tahun Terbit" required>
         </div>
+        <div class="form-group">
+                    <label for="pdf">PDF File:</label>
+                    <div class="custom-file">
+                        <input id="pdf" name="pdf" accept="application/pdf" type="file" class="custom-file-input" id="inputGroupFile02" aria-describedby="inputGroupFileAddon02">
+                        <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+                    </div>
+                </div>
         <div class="form-group">
             <label for="kategori_id">Kategori:</label>
             <select class="form-control" id="kategori_id" name="kategori_id">

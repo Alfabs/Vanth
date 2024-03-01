@@ -4,35 +4,34 @@ include '../../function/func.php';
 
 session_start();
 
-// Check apakah pengguna sudah login
+// Check if the user is logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: ../../login.php"); // Redirect ke halaman login jika belum login
+    header("Location: ../../login.php");
     exit();
 }
-
 
 $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
 
 dataBuku($userRole);
 
-// Jika id buku dikirimkan melalui URL
+// If book ID is sent via URL
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Ambil data buku dari database
+    // Retrieve book data from the database
     $get_book_query = "SELECT * FROM buku WHERE id = $id";
     $get_book_result = mysqli_query($conn, $get_book_query);
 
     if ($get_book_result) {
         $book_data = mysqli_fetch_assoc($get_book_result);
     } else {
-        $error_message = "Gagal mengambil data buku.";
+        $error_message = "Failed to retrieve book data.";
     }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ambil data yang dikirimkan dari form
+    // Retrieve data sent from the form
     $judul = htmlspecialchars($_POST["judul"]);
     $penulis = htmlspecialchars($_POST["penulis"]);
     $penerbit = htmlspecialchars($_POST["penerbit"]);
@@ -41,47 +40,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stok = htmlspecialchars($_POST["stok"]);
     $deskripsi = htmlspecialchars($_POST["deskripsi"]);
 
-
-    // Proses unggah gambar baru jika ada
+    // Process uploading new cover image if available
     if ($_FILES['cover']['name']) {
         $cover_tmp = $_FILES['cover']['tmp_name'];
         $cover_name = $_FILES['cover']['name'];
-        $cover_path = "cover/" . $cover_name; // Sesuaikan dengan path penyimpanan cover
+        $cover_path = "cover/" . $cover_name;
 
-        // Hapus gambar cover buku sebelumnya jika ada
+        // Remove previous cover image if exists
         if (!empty($book_data['cover'])) {
             unlink("cover/" . $book_data['cover']);
         }
 
         move_uploaded_file($cover_tmp, $cover_path);
-
-        // Update data buku dengan cover yang baru diunggah
-        $update_book_query = "UPDATE buku
-                              SET judul = '$judul', deskripsi = '$deskripsi', penulis = '$penulis', penerbit = '$penerbit',
-                                  tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id',
-                                  cover = '$cover_name', stok = '$stok'
-                              WHERE id = $id";
-    } else {
-        // Update data buku tanpa mengubah cover
-        $update_book_query = "UPDATE buku
-                              SET judul = '$judul', deskripsi = '$deskripsi', penulis = '$penulis', penerbit = '$penerbit',
-                                  tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id', stok = '$stok' 
-                              WHERE id = $id";
     }
+
+    // Process uploading new PDF file if available
+    if ($_FILES['pdf']['name']) {
+        $pdf_tmp = $_FILES['pdf']['tmp_name'];
+        $pdf_name = $_FILES['pdf']['name'];
+        $pdf_path = "pdf/" . $pdf_name;
+
+        // Remove previous PDF file if exists
+        if (!empty($book_data['pdf'])) {
+            unlink("pdf/" . $book_data['pdf']);
+        }
+
+        move_uploaded_file($pdf_tmp, $pdf_path);
+    }
+
+    // Update book data with new cover and PDF if uploaded
+    $update_book_query = "UPDATE buku
+                          SET judul = '$judul', deskripsi = '$deskripsi', penulis = '$penulis', penerbit = '$penerbit',
+                              tahun_terbit = '$tahun_terbit', kategori_id = '$kategori_id', stok = '$stok'";
+
+    // Add cover and PDF data to query if uploaded
+    if ($_FILES['cover']['name']) {
+        $update_book_query .= ", cover = '$cover_name'";
+    }
+    if ($_FILES['pdf']['name']) {
+        $update_book_query .= ", pdf = '$pdf_name'";
+    }
+
+    $update_book_query .= " WHERE id = $id";
 
     $update_book_result = mysqli_query($conn, $update_book_query);
 
     if ($update_book_result) {
-        // Pembaruan buku berhasil
+        // If the update is successful
+        // Redirect to the index page
         header('location: index.php');
-        $_SESSION['success'] = "Pembaruan berhasil";
+        $_SESSION['success'] = "Buku berhasil diperbarui";
     } else {
-        // Terdapat kesalahan saat query
-        $error_message = "Terjadi kesalahan. Silakan coba lagi.";
+        // If there is an error in the query
+        $error_message = "An error occurred. Please try again.";
     }
 }
 
 ?>
+
 
 
 
@@ -375,6 +391,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="">Penerbit :</label>
                     <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Penerbit" required value="<?php echo $book_data['penerbit']; ?>">
                 </div>
+                <div class="form-group">
+                    <label for="pdf">PDF File:</label>
+                    <div class="custom-file">
+                        <input id="pdf" name="pdf" accept="application/pdf" type="file" class="custom-file-input" id="inputGroupFile02" aria-describedby="inputGroupFileAddon02">
+                        <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="">Tahun Terbit :</label>
                     <input type="text" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Tahun Terbit" required value="<?php echo $book_data['tahun_terbit']; ?>">

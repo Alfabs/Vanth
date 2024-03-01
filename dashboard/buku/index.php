@@ -339,7 +339,7 @@ $total_pages = ceil($total_books / $limit);
 						
 					<div class="row">
                             <?php if(isset($_SESSION['success'])) { ;?>
-                            <div class="col-lg-5 alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
+                            <div class="col-lg-3 alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
                             <?php   
                                 unset($_SESSION['success']);
                             } ;?>

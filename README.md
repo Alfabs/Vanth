@@ -15,6 +15,7 @@ Aplikasi Perpustakaan Digital ini adalah aplikasi perpustakaan digital berbasis 
 - Menghapus ulasan user peminjam sebagai admin
 - Mengubah dan menghapus ulasan yang dikirim sebagai user peminjam
 - Responsive Page untuk peminjam
+- Baca buku pdf online
 
 
 ## Get Started

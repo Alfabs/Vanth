@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2024 at 07:41 AM
+-- Generation Time: Mar 01, 2024 at 07:21 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -33,11 +33,11 @@ CREATE TABLE `buku` (
   `judul` varchar(255) NOT NULL,
   `deskripsi` text NOT NULL,
   `cover` varchar(255) NOT NULL,
+  `pdf` varchar(255) NOT NULL,
   `penulis` varchar(255) NOT NULL,
   `penerbit` varchar(255) NOT NULL,
   `tahun_terbit` int(11) NOT NULL,
   `stok` int(11) NOT NULL,
-  `tempat` int(11) NOT NULL,
   `kategori_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -46,10 +46,12 @@ CREATE TABLE `buku` (
 -- Dumping data for table `buku`
 --
 
-INSERT INTO `buku` (`id`, `perpus_id`, `judul`, `deskripsi`, `cover`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `tempat`, `kategori_id`, `created_at`) VALUES
-(1, 0, 'William', 'Menceritakan seorang anak kecil bernama &quot;William&quot;', 'William.jpg', 'Risa', 'Bukune', 2017, 1, 2, 1, '2024-02-23 02:47:43'),
-(3, 0, 'Lord of the ring', 'Fantasy', '72.jpg', 'Tolkien', 'gatau', 2022, 0, 3, 1, '2024-02-23 02:58:46'),
-(5, 0, 'Janshen', 'Menceritakan seorang anak kecil bernama &quot;Janshen&quot;', '9786022203896.jpg', 'Uknown', 'PT Cahaya ', 2019, 1, 3, 2, '2024-02-23 02:48:45');
+INSERT INTO `buku` (`id`, `perpus_id`, `judul`, `deskripsi`, `cover`, `pdf`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `kategori_id`, `created_at`) VALUES
+(11, 0, 'Otonari No Tenshi', 'Menceritakan seorang siswa SMA yang memberi payung kepada seorang gadis di ayunan', 'otonari.jpg', '', 'Uknown', 'PT Cahaya ', 2019, 3, 4, '2024-02-28 09:43:18'),
+(13, 0, 'Janshen', 'Menceritakan seorang anak kecil bernama &quot;Janshen&quot;', '9786022203896.jpg', '', 'Risa', 'Bukune', 2018, 2, 1, '2024-02-28 09:32:56'),
+(14, 0, 'William', 'Menceritakan seorang anak kecil bernama &quot;William&quot;', 'William.jpg', '', 'Risa', 'Bukune', 2019, 0, 1, '2024-02-29 03:30:11'),
+(15, 0, 'Lord of the ring', 'Fantasy', '72.jpg', '', 'Tolkien', 'PT Cahaya ', 2013, 2, 4, '2024-02-29 03:19:52'),
+(16, 0, 'Otonari no Ginga', 'Menceritakan kisah romansa seorang mangaka dengan asistennya', '135041.jpg', '', 'Amagakure Gido', 'Kodansha', 2022, 2, 2, '2024-02-29 06:52:37');
 
 -- --------------------------------------------------------
 
@@ -104,7 +106,9 @@ CREATE TABLE `koleksi_pribadi` (
 --
 
 INSERT INTO `koleksi_pribadi` (`id`, `user`, `buku`, `created_at`) VALUES
-(1, 2, 3, '2024-02-23 02:43:29');
+(34, 2, 5, '2024-02-24 23:12:24'),
+(38, 2, 15, '2024-02-29 01:50:02'),
+(40, 2, 14, '2024-02-29 06:13:51');
 
 -- --------------------------------------------------------
 
@@ -121,22 +125,6 @@ CREATE TABLE `peminjaman` (
   `status_peminjaman` enum('Dipinjam','Dikembalikan','','') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `peminjaman`
---
-
-INSERT INTO `peminjaman` (`id`, `user`, `buku`, `tanggal_peminjaman`, `tanggal_pengembalian`, `status_peminjaman`, `created_at`) VALUES
-(1, 2, 2, '2024-02-21', '2024-02-21', 'Dikembalikan', '2024-02-21 03:01:54'),
-(2, 2, 2, '2024-02-21', '0000-00-00', 'Dipinjam', '2024-02-21 03:02:43'),
-(3, 2, 3, '2024-02-21', '2024-02-21', 'Dikembalikan', '2024-02-21 03:52:46'),
-(4, 2, 4, '2024-02-21', '0000-00-00', 'Dipinjam', '2024-02-21 03:52:54'),
-(5, 2, 1, '2024-02-21', '2024-02-21', 'Dikembalikan', '2024-02-21 04:22:26'),
-(6, 2, 1, '2024-02-21', '2024-02-22', 'Dikembalikan', '2024-02-22 06:27:00'),
-(7, 2, 1, '2024-02-23', '2024-02-23', 'Dikembalikan', '2024-02-23 02:30:36'),
-(8, 2, 1, '2024-02-23', '2024-02-23', 'Dikembalikan', '2024-02-23 02:39:29'),
-(9, 2, 1, '2024-02-23', '0000-00-00', 'Dipinjam', '2024-02-23 02:45:02'),
-(10, 2, 3, '2024-02-23', '0000-00-00', 'Dipinjam', '2024-02-23 02:58:46');
 
 -- --------------------------------------------------------
 
@@ -177,7 +165,7 @@ CREATE TABLE `reset_password` (
 
 INSERT INTO `reset_password` (`id`, `email`, `reset_code`) VALUES
 (1, 'natsukisubaru073@gmail.com', '308395'),
-(2, 'albiafabiansya@gmail.com', '660953');
+(2, 'albiafabiansya@gmail.com', '877853');
 
 -- --------------------------------------------------------
 
@@ -199,8 +187,8 @@ CREATE TABLE `ulasan_buku` (
 --
 
 INSERT INTO `ulasan_buku` (`id`, `user`, `buku`, `ulasan`, `rating`, `created_at`) VALUES
-(3, 1, 3, 'itu', 1, '2024-02-21 03:03:52'),
-(4, 2, 3, 'novel nya seru, bikin deg degan', 4, '2024-02-23 03:09:20');
+(18, 1, 11, 'sfgryh', 1, '2024-03-01 02:41:25'),
+(19, 2, 11, 'anime nya sangat bagus, bikin diabetes aseli no hoax', 5, '2024-03-01 02:57:50');
 
 -- --------------------------------------------------------
 
@@ -225,9 +213,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `perpus_id`, `username`, `password`, `email`, `nama_lengkap`, `alamat`, `role`, `created_at`) VALUES
-(1, 1, 'Albia', '$2y$10$KhucSHjvS2W4EcXrJbtOueOiWZ5ZpMKp.BcZZGify8qJrph5/DXD6', 'albiafabiansya@gmail.com', 'Albia Fabiansyah', 'Banjar', 'admin', '2024-02-21 03:40:02'),
+(1, 1, 'Albia', '$2y$10$2bimVnpPvlEsVbGAlZSc1e5lBO/ZAm0TwEeGQ3awxLNYGy5vohERC', 'albiafabiansya@gmail.com', 'Albia Fabiansyah', 'Banjar', 'admin', '2024-02-29 06:19:00'),
 (2, 0, 'Ezzi', '$2y$10$sb9DOI7ESa6oP9eUFrTPFuf.rnsDD70q2znU9j0VsJ/iQLTdCanAS', 'ezi22@gmail.com', 'Fahrezi', 'Sumedang', 'peminjam', '2024-02-21 02:59:53'),
-(3, 0, 'ilham ganteng', '$2y$10$YEvqSkR8ODwx9fg6U686qODq1SEn1UlpMd6mnJWdrt0fLSDvnoUEq', 'ciel@gmail.com', 'afgan', 'banjar', 'petugas', '2024-02-21 04:30:27');
+(3, 0, 'ilham ganteng', '$2y$10$YEvqSkR8ODwx9fg6U686qODq1SEn1UlpMd6mnJWdrt0fLSDvnoUEq', 'ciel@gmail.com', 'afgan', 'banjar', 'petugas', '2024-02-21 04:30:27'),
+(4, 0, 'MFPB', '$2y$10$DpEY3DHdiSCk5.jPjKxSo.cwOpxPrpT67fjeHczSth4RW19CL.GAW', 'rezzasukma@gmail.com', 'Fahreza', 'duka', 'peminjam', '2024-02-28 02:18:50');
 
 --
 -- Indexes for dumped tables
@@ -295,7 +284,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `buku`
 --
 ALTER TABLE `buku`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `detail_peminjaman`
@@ -313,13 +302,13 @@ ALTER TABLE `kategori_buku`
 -- AUTO_INCREMENT for table `koleksi_pribadi`
 --
 ALTER TABLE `koleksi_pribadi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `peminjaman`
 --
 ALTER TABLE `peminjaman`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `perpustakaan`
@@ -337,13 +326,13 @@ ALTER TABLE `reset_password`
 -- AUTO_INCREMENT for table `ulasan_buku`
 --
 ALTER TABLE `ulasan_buku`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
