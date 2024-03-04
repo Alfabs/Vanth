@@ -481,6 +481,15 @@ if (mysqli_num_rows($result_kategori) > 0) {
     $("#cover").change(function () {
         readURL(this);
     });
+
+    
+</script>
+<script>
+    function updateFileName(input) {
+        var fileName = input.files[0].name;
+        var label = input.nextElementSibling;
+        label.innerText = fileName;
+    }
 </script>
 
 

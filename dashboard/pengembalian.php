@@ -15,19 +15,27 @@ $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
 
 // Handle jika tombol kembalikan diklik
-if(isset($_POST['return'])) {
+if (isset($_POST['return'])) {
     // Ambil tanggal hari ini
     $today = date('Y-m-d');
 
-    // Ubah status peminjaman menjadi "dikembalikan"
-    $sql = "UPDATE peminjaman SET status_peminjaman = 'dikembalikan' WHERE tanggal_pengembalian = '$today' AND status_peminjaman = 'dipinjam'";
-    if(mysqli_query($conn, $sql)) {
-        // Berhasil mengembalikan
-        $success_message = "Buku berhasil dikembalikan!";
-    } else {
-        // Gagal mengembalikan
-        $error_message = "Buku Gagal Dikembalikan!";
+    // Ambil daftar buku yang harus dikembalikan hari ini
+    $queryBooksToReturn = "SELECT buku FROM peminjaman WHERE tanggal_pengembalian = '$today' AND status_peminjaman = 'dipinjam'";
+    $resultBooksToReturn = mysqli_query($conn, $queryBooksToReturn);
+
+    // Ubah status peminjaman menjadi "dikembalikan" dan tambahkan stok buku yang dikembalikan
+    while ($row = mysqli_fetch_assoc($resultBooksToReturn)) {
+        $bookId = $row['buku'];
+        
+        $updateQuery = "UPDATE peminjaman SET status_peminjaman = 'dikembalikan' WHERE tanggal_pengembalian = '$today' AND status_peminjaman = 'dipinjam' AND buku = $bookId";
+        mysqli_query($conn, $updateQuery);
+
+        $updateStockQuery = "UPDATE buku SET stok = stok + 1 WHERE id = $bookId";
+        mysqli_query($conn, $updateStockQuery);
     }
+
+    // Berhasil mengembalikan
+    $success_message = "Buku berhasil dikembalikan!";
 }
 
 $current_date = date('Y-m-d');
@@ -294,58 +302,58 @@ dataBuku($userRole);
                 <!-- End of Topbar -->
 
               <div class="container-fluid">
-                    <div class="d-sm-flex align-items-center justify-content-center mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Important!</h1>
-                    </div>
-                    <div class="row justify-content-center">
-                        <?php if (isset($success_message) || isset($error_message)) { ?>
-                            <div class="col-md-4">
-                                <div class="alert alert-<?php echo isset($success_message) ? 'success' : 'danger'; ?> alert-dismissible fade show" role="alert">
-                                    <?php echo isset($success_message) ? $success_message : $error_message; ?>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
+    <div class="d-sm-flex align-items-center justify-content-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Important!</h1>
+    </div>
+    <div class="row justify-content-center">
+        <?php if ($totalBooksToReturn > 0) { ?>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Buku yang harus dikembalikan hari ini</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $totalBooksToReturn ?> buku</div>
                             </div>
-                        <?php } ?>
-                    </div>
-                    <div class="row justify-content-center">
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-danger shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Buku yang harus dikembalikan hari ini</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $totalBooksToReturn ?> buku</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-book fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer p-2 text-center">
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#returnModal">Kembalikan</button>
-                                </div>
+                            <div class="col-auto">
+                                <i class="fas fa-book fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
+                    <div class="card-footer p-2 text-center">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#returnModal">Kembalikan</button>
+                    </div>
                 </div>
             </div>
+        <?php } else { ?>
+            <div class="col-md-4">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    Tidak ada buku yang harus dikembalikan hari ini.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+
             <!-- End of Main Content -->
             <!-- Footer omitted for brevity -->
-            <!-- Footer -->
-                  <footer class="sticky-footer bg-white">
-                      <div class="container my-auto">
-                          <div class="copyright text-center my-auto">
-                              <span>Copyright &copy; Your Website 2021</span>
-                          </div>
-                      </div>
-                  </footer>
         </div>
+        <!-- Footer -->
+              <footer class="sticky-footer bg-white">
+                  <div class="container my-auto">
+                      <div class="copyright text-center my-auto">
+                          <span>Copyright &copy; Your Website 2021</span>
+                      </div>
+                  </div>
+              </footer>
                   <!-- End of Footer -->
         <!-- End of Content Wrapper -->
     </div>
     <!-- End of Page Wrapper -->
+    
     <!-- Return Modal-->
     <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

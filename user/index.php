@@ -150,7 +150,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                            Category
+                            Kategori
                         </button>
                         <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="dropdown-menu" aria-labelledby="categoryDropdown">
                             <button class="dropdown-item" onclick="filterBooks(null)">All</button>
@@ -262,18 +262,19 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         <?php if ($isBorrowed) : ?>
                                             <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
                                         <?php endif; ?>
+                                        <!-- Tombol Bookmark -->
                                         <?php
                                         // Cek apakah buku sudah ada di koleksi pribadi user
                                         $checkQuery = "SELECT * FROM koleksi_pribadi WHERE user = (SELECT id FROM user WHERE username = '$username') AND buku = {$row['id']}";
                                         $checkResult = mysqli_query($conn, $checkQuery);
 
                                         if (mysqli_num_rows($checkResult) > 0) :?>
-                                            <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="bookmark-btn btn btn-secondary" onclick="return confirmDelete()">
-                                                <i class="fas fa-solid fa-heart "></i>
+                                            <a href="index.php?id=<?= $row['id']; ?>&action=delete" class="btn btn-secondary" onclick="return confirmDelete()">
+                                                <i class="fas fa-heart"></i>
                                             </a>
                                         <?php else : ?>
-                                            <a href="index.php?id=<?= $row['id']; ?>&action=add" class="bookmark-btn btn btn-secondary">
-                                                <i class="far fa-regular fa-heart"></i>
+                                            <a href="index.php?id=<?= $row['id']; ?>&action=add" class="btn btn-secondary">
+                                                <i class="far fa-heart"></i>
                                             </a>
                                         <?php endif; ?>
                                     </div>

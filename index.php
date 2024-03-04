@@ -86,10 +86,9 @@ $result = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_assoc($result)) {
                     ?>
                     <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <img src="dashboard/buku/cover/<?=$row['cover'];?>" alt="">
+                        <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4 shadow-sm">
+                            <img style="width: 100%; height: 410px; object-fit: cover;" class="card-img-top" src="dashboard/buku/cover/<?=$row['cover'];?>" alt="">
                             <div class="card-body">
-
                                 <h5 class="card-title"><?php echo $row['judul']; ?></h5>
                                 <p class="card-text"><?= $row['penerbit'];?></p>
                                 <p class="card-text">Rating: <?php echo number_format($row['avg_rating'], 1); ?></p>

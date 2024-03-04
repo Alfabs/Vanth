@@ -43,7 +43,7 @@ $username = $_SESSION['username'];
 
     <!-- Custom styles for PDF display -->
     <style>
-        /* Custom styles for PDF display */
+       /* Custom styles for PDF display */
 .pdf-container-wrapper {
     display: flex;
     align-items: center; /* Mengatur konten ke tengah secara vertikal */
@@ -63,23 +63,46 @@ $username = $_SESSION['username'];
     font-size: 20px;
 }
 
-        .page-navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
+.page-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
-        .page-navigation button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-        }
+.page-navigation button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Media queries untuk tampilan mobile */
+@media (max-width: 768px) {
+    .pdf-container-wrapper {
+        flex-direction: column; /* Menjadikan tata letak vertikal pada perangkat dengan lebar layar <= 768px */
+    }
+
+    .page-navigation {
+        flex-direction: column; /* Menjadikan tata letak vertikal pada perangkat dengan lebar layar <= 768px */
+        width: 100%; /* Menyesuaikan lebar tombol navigasi dengan lebar layar pada perangkat mobile */
+    }
+
+    .page-navigation button {
+        margin-bottom: 10px; /* Menambahkan jarak antara tombol navigasi pada tampilan mobile */
+    }
+}
+
     </style>
 
 </head>
 
 <body id="page-top">
+    <a href="index.php" class="btn-back" style="position: absolute; top: 10px; left: 10px; z-index: 999;">
+        <span class="btn btn-primary btn-user btn-block">
+            <i class="fas fa-chevron-left"></i>
+        </span>
+    </a>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -124,8 +147,11 @@ $username = $_SESSION['username'];
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
+                
                 <div class="container">
+                    
                     <div class="pdf-container-wrapper">
+                        
                         <button id="prev-page" class="page-navigation-button"><i class="fas fa-chevron-left"></i></button>
                         <div class="text-center" id="pdf-container"></div>
                         <button id="next-page" class="page-navigation-button"><i class="fas fa-chevron-right"></i></button>
@@ -137,39 +163,14 @@ $username = $_SESSION['username'];
             </div>
             <!-- End of Main Content -->
 
-            <!-- Footer -->
-            <footer style="box-shadow: 0 -7px 17px 0 rgba(0,0,0,0.4);"
-                class="mt-5 footer bg-light text-center py-4 border-top">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h5 class="font-weight-bold">Tentang Kami</h5>
-                            <p>Aplikasi perpustakaan digital ini adalah Aplikasi berbasis website untuk membaca
-                                buku secara online dan menyimpan buku secara online</p>
-                        </div>
-                        <div class="col-md-4">
-                            <h5 class="font-weight-bold">Contact Us</h5>
-                            <p>Email: aivoice725@gmail.com<br>Phone: +1234567890</p>
-                        </div>
-                        <div class="col-md-4">
-                            <h5 class="font-weight-bold">Discovery</h5>
-                            <a data-toggle="modal" data-target="#logoutModal" href="../dashboard/logout.php"
-                                class="btn btn-outline-primary me-2">Logout</a>
-                            <a href="index.php" class="btn btn-primary">Home</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="container mt-3">
-                    <p>&copy; 2024 Your Website. All rights reserved.</p>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+            
 
         </div>
         <!-- End of Content Wrapper -->
 
     </div>
     <!-- End of Page Wrapper -->
+    
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">

@@ -96,13 +96,27 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
     <link href="../dashboard/css/sb-admin-2.min.css" rel="stylesheet">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <style>
+    body {
+        position: relative;
+        min-height: 100vh;
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        /* Optional: adjust padding or margin as needed */
+        padding: 20px 0;
+        margin-top: 20px;
+    }
     
+</style>
 </head>
 
 <body id="page-top">
     <!-- Page Wrapper -->
 
-    <div id="wrapper">
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Main Content -->
@@ -243,11 +257,26 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+             <footer style="box-shadow: 0 -7px 17px 0 rgba(0,0,0,0.4);" class="mt-5 footer bg-light text-center py-4 border-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="font-weight-bold">Tentang Kami</h5>
+                            <p>Aplikasi perpustakaan digital ini adalah Aplikasi berbasis website 
+                                untuk membaca buku secara online dan menyimpan buku secara online</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5  class="font-weight-bold">Contact Us</h5>
+                            <p>Email: aivoice725@gmail.com<br>Phone: +1234567890</p>
+                        </div>
+                        <div class="col-md-4">
+                                <h5 class="font-weight-bold">Account</h5>
+                                <a data-toggle="modal" data-target="#logoutModal" href="../dashboard/logout.php" class="btn btn-outline-primary me-2">Logout</a>
+                        </div>   
                     </div>
+                </div>
+                <div class="container mt-3">
+                    <p>&copy; 2024 Your Website. All rights reserved.</p>
                 </div>
             </footer>
             <!-- End of Footer -->
@@ -255,8 +284,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
