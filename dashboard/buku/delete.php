@@ -26,6 +26,11 @@ if (isset($_GET['id'])) {
             unlink($cover_path);
         }
 
+        if (!empty($book_data['pdf'])) {
+            $pdf_path = "pdf/" . $book_data['pdf'];
+            unlink($pdf_path);
+        }
+
         // Query untuk menghapus buku
         $delete_query = "DELETE FROM buku WHERE id = '$id_buku'";
         $delete_result = mysqli_query($conn, $delete_query);

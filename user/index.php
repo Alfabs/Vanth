@@ -183,7 +183,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION['username'];?></span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="../dashboard/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -473,8 +473,8 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
         $(".bookmark-btn").click(function(e) {
             e.preventDefault(); // Mencegah tindakan default dari tautan
 
-            var bookId = $(this).data('book-id'); // Mendapatkan ID buku dari atribut data
-            var action = $(this).data('action'); // Mendapatkan tindakan (add/delete)
+            let bookId = $(this).data('book-id'); // Mendapatkan ID buku dari atribut data
+            let action = $(this).data('action'); // Mendapatkan tindakan (add/delete)
 
             // Kirim permintaan AJAX
             $.ajax({

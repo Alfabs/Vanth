@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 20, 2024 at 07:57 AM
+-- Generation Time: Mar 05, 2024 at 09:56 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -33,11 +33,11 @@ CREATE TABLE `buku` (
   `judul` varchar(255) NOT NULL,
   `deskripsi` text NOT NULL,
   `cover` varchar(255) NOT NULL,
+  `pdf` varchar(255) NOT NULL,
   `penulis` varchar(255) NOT NULL,
   `penerbit` varchar(255) NOT NULL,
   `tahun_terbit` int(11) NOT NULL,
   `stok` int(11) NOT NULL,
-  `tempat` int(11) NOT NULL,
   `kategori_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -46,26 +46,17 @@ CREATE TABLE `buku` (
 -- Dumping data for table `buku`
 --
 
-INSERT INTO `buku` (`id`, `perpus_id`, `judul`, `deskripsi`, `cover`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `tempat`, `kategori_id`, `created_at`) VALUES
-(18, 0, 'Mushoku Tensei', '', '81WEVQiuExL._AC_UF1000,1000_QL80_.jpg', 'Rifujin na Magonote', 'Media Factory', 2013, 0, 0, 2, '2024-02-19 04:01:27'),
-(19, 0, 'Ngutang dapet pacar', '', 'FqLba5AWYAMvV9Q.jpg', 'Unknown', 'PT Cahaya ', 2018, 0, 0, 1, '2024-02-12 04:18:32'),
-(20, 0, 'Oregairu', '', 'My_Teen_Romantic_Comedy_SNAFU_cover.jpg', 'Hamba Allah', 'Shueisha', 2222, 1, 0, 1, '2024-02-16 06:36:44'),
-(21, 0, 'Mashle', '', 'mashle-magic-and-muscles-01e6b0.jpg', 'Honobu Yonezawa', 'Haru', 2018, 0, 0, 1, '2024-02-19 04:03:54'),
-(22, 0, 'Roshidere', '', 'Roshidere_light_novel_volume_1_cover.jpg', 'Unknown', 'PT Cahaya ', 9999, 0, 0, 1, '2024-02-12 06:19:55'),
-(23, 0, 'Hyouka', '', 'Hyouka_English_poster.jpg', 'Unknown', 'Haru', 1234, 1, 0, 1, '2024-02-10 00:25:13');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `detail_peminjaman`
---
-
-CREATE TABLE `detail_peminjaman` (
-  `id` int(11) NOT NULL,
-  `peminjaman_id` int(11) NOT NULL,
-  `buku_id` int(11) NOT NULL,
-  `created_ad` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `buku` (`id`, `perpus_id`, `judul`, `deskripsi`, `cover`, `pdf`, `penulis`, `penerbit`, `tahun_terbit`, `stok`, `kategori_id`, `created_at`) VALUES
+(15, 0, 'Lord of the ring', 'Menceritakan kisah seorang pejuang', '72.jpg', 'The Lord of the Rings 1.pdf', 'Tolkien', 'PT Cahaya ', 2013, 1, 4, '2024-03-05 07:34:43'),
+(17, 0, 'Nozomanu Fushi no Boukensha', 'Menceritakan seorang petualang yang mati oleh skeleton dragon di dungeon, dia pikir dia mati di dungeon tapi ternyata dia hidup kembali menajdi undead. Ini adalah kisah seorang petualang yang terpaksa hidup sebagai undead', 'The-Unwanted-Undead-Adventurer.jpeg', '[ Meganei ] Nozom.Fush.no.Bouken VOLUME 001.pdf', 'Yuu Okanu', 'Shōsetsuka ni Narō', 2016, 4, 4, '2024-03-04 04:06:30'),
+(18, 0, 'Web Security for Developers: Real Threats, Practical Defense ', 'Web Security for Developers: Real Threats, Practical Defense ', '81AB6UJRLdL._SY425_.jpg', 'Web Security for Developers Real Threats, Practical Defense (Malcolm McDonald) (Z-Library).pdf', 'Malcolm McDonald ', 'Malcolm McDonald ', 2020, 3, 5, '2024-03-05 08:53:45'),
+(21, 0, 'Otonari No Tenshi', 'Menceritakan seorang siswa SMA yang memberikan payung pada perempuan yang kehujanan di ayunan', 'otonari.jpg', 'Otonari Tenshi Volume 1 - Kaito Novel - CSNovel.Blogspo.com.pdf', 'Saekisan', 'Media Factory', 2019, 2, 2, '2024-03-05 07:36:05'),
+(22, 0, 'Django API with react', 'Cara memulai django API dengan react Full Stack Applications', '41ytrAW0bEL._SX342_SY445_.jpg', 'Beginning Django API with React Build Django 4 Web APIs with React Full Stack Applications (Correa, Daniel  Lim, Greg) (Z-Library).pdf', 'Greg Lim, Daniel Correa', 'Greg Lim, Daniel Correa', 2022, 1, 5, '2024-03-05 08:02:40'),
+(23, 0, 'Beginning Rust', 'Belajar pemrograman dengan Rust dengan cara yang mudah dan langkah demi langkah di Unix, shell Linux, macOS, dan baris perintah Windows. Ketika Anda membaca buku ini, Anda akan membangun pengetahuan yang Anda peroleh di bab-bab sebelumnya dan melihat apa yang ditawarkan Rust, mulai dari dasar-dasar Rust, termasuk cara memberi nama objek, mengontrol aliran eksekusi, dan menangani tipe primitif.', '61Jcd5gI-JL._SY425_.jpg', 'Beginning Rust From Novice to Professional (Carlo Milanesi) (Z-Library).pdf', 'Carlo Milaner', 'Apress', 2018, 4, 5, '2024-03-05 08:43:51'),
+(24, 0, 'Building REST APIs with Flask', 'Panduan untuk membangun REST APIs dengan library flask python', '611+uPgPOVL._SY425_.jpg', 'Building REST APIs with Flask Create Python Web Services with MySQL (Kunal Relan) (Z-Library).pdf', 'Kunal Relan', 'Apress', 2019, 3, 5, '2024-03-05 08:46:52'),
+(25, 0, 'Django Standalone Apps', 'Mengembangkan aplikasi Django mandiri untuk digunakan sebagai blok bangunan yang dapat digunakan kembali untuk proyek Django yang lebih besar. Buku ini mengeksplorasi praktik terbaik untuk menerbitkan aplikasi-aplikasi ini, dengan pertimbangan khusus untuk menguji aplikasi-aplikasi Django, dan strategi untuk mengekstraksi fungsionalitas yang ada ke dalam paket terpisah.', '61JjSsG4IyL._SY425_.jpg', 'Django Standalone Apps Learn to Develop Reusable Django Libraries (Ben Lopatin) (Z-Library).pdf', 'Ben Lopatin', 'Apress', 2020, 2, 5, '2024-03-05 08:48:47'),
+(26, 0, 'Fullstack Rust', 'Fullstack Rust memecahkan masalah itu. Dalam buku ini kami menunjukkan kepada Anda cara menggunakan Rust untuk membangun server web yang sangat cepat, membuat alat baris perintah, dan mengkompilasi aplikasi untuk dijalankan di browser dengan Web Assembly (WASM)', 's_hero2x.jpg', 'Fullstack Rust (Nate Murray) (Z-Library).pdf', 'Andrew Weiss, Nate Murray', 'Newline', 2020, 3, 5, '2024-03-05 08:50:59'),
+(27, 0, 'Data Structures and Algorithms with Golang', 'Golang adalah salah satu bahasa pemrograman yang paling cepat berkembang di industri perangkat lunak. Kecepatan, kesederhanaan, dan keandalannya menjadikannya pilihan yang sempurna untuk membangun aplikasi yang kuat. Hal ini membuat Anda harus memiliki dasar yang kuat dalam struktur data dan algoritma dengan Go untuk membangun aplikasi yang dapat diskalakan. Dilengkapi dengan tutorial praktis, buku ini akan memandu Anda dalam menggunakan struktur data dan', '61ceIDOCCNL._SY425_.jpg', 'Learn Data Structures and Algorithms with Golang Level up your Go programming skills to develop faster and more efficient code (Bhagvan Kommadi) (Z-Library).pdf', 'Bhagvan Kommadi', 'Pactk', 2019, 5, 5, '2024-03-05 08:52:37');
 
 -- --------------------------------------------------------
 
@@ -84,10 +75,12 @@ CREATE TABLE `kategori_buku` (
 --
 
 INSERT INTO `kategori_buku` (`id`, `nama_kategori`, `created_at`) VALUES
-(1, 'Religi', '0000-00-00 00:00:00'),
-(2, 'Romansa', '2024-02-10 05:46:08'),
-(3, 'Komedi', '2024-02-10 05:46:08'),
-(4, 'Gore', '2024-02-10 06:11:44');
+(1, 'Thriller', '2024-03-05 04:04:36'),
+(2, 'Romansa', '2024-02-21 02:36:21'),
+(3, 'Komedi', '2024-02-21 02:58:52'),
+(4, 'Fantasy', '2024-02-22 01:16:32'),
+(5, 'Pendidikan', '2024-03-01 22:11:55'),
+(6, 'Adventure', '2024-03-05 03:45:13');
 
 -- --------------------------------------------------------
 
@@ -107,8 +100,9 @@ CREATE TABLE `koleksi_pribadi` (
 --
 
 INSERT INTO `koleksi_pribadi` (`id`, `user`, `buku`, `created_at`) VALUES
-(31, 20, 18, '2024-02-09 07:04:02'),
-(33, 15, 19, '2024-02-19 04:36:41');
+(34, 2, 5, '2024-02-24 23:12:24'),
+(44, 2, 17, '2024-03-04 06:05:01'),
+(45, 2, 18, '2024-03-05 00:31:52');
 
 -- --------------------------------------------------------
 
@@ -125,25 +119,6 @@ CREATE TABLE `peminjaman` (
   `status_peminjaman` enum('Dipinjam','Dikembalikan','','') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `peminjaman`
---
-
-INSERT INTO `peminjaman` (`id`, `user`, `buku`, `tanggal_peminjaman`, `tanggal_pengembalian`, `status_peminjaman`, `created_at`) VALUES
-(23, 15, 18, '2024-02-09', '2024-02-09', 'Dikembalikan', '2024-02-09 06:24:00'),
-(24, 15, 18, '2024-02-09', '2024-02-09', 'Dikembalikan', '2024-02-09 06:31:11'),
-(25, 15, 18, '2024-02-09', '2024-02-09', 'Dikembalikan', '2024-02-09 06:32:08'),
-(26, 15, 18, '2024-02-09', '2024-02-09', 'Dikembalikan', '2024-02-09 06:39:35'),
-(27, 15, 18, '2024-02-09', '2024-02-09', 'Dikembalikan', '2024-02-09 06:54:55'),
-(28, 15, 18, '2024-02-09', '2024-02-09', 'Dikembalikan', '2024-02-09 06:55:04'),
-(29, 15, 18, '2024-02-09', '2024-02-10', 'Dikembalikan', '2024-02-10 00:55:26'),
-(30, 15, 19, '2024-02-10', '2024-02-10', 'Dikembalikan', '2024-02-10 00:43:22'),
-(31, 15, 19, '2024-02-10', '2024-02-10', 'Dikembalikan', '2024-02-10 00:43:22'),
-(32, 15, 19, '2024-02-12', '0000-00-00', 'Dipinjam', '2024-02-12 04:18:32'),
-(33, 15, 22, '2024-02-12', '0000-00-00', 'Dipinjam', '2024-02-12 06:19:55'),
-(34, 15, 20, '2024-02-13', '2024-02-16', 'Dikembalikan', '2024-02-16 06:36:44'),
-(35, 15, 21, '2024-02-19', '0000-00-00', 'Dipinjam', '2024-02-19 04:03:54');
 
 -- --------------------------------------------------------
 
@@ -183,42 +158,8 @@ CREATE TABLE `reset_password` (
 --
 
 INSERT INTO `reset_password` (`id`, `email`, `reset_code`) VALUES
-(1, 'albiafabiansya@gmail.com', '0'),
-(2, 'albiafabiansya@gmail.com', 'bea67dc0e009c9c6'),
-(3, 'natsukisubaru073@gmail.com', '279174'),
-(4, 'natsukisubaru073@gmail.com', '279174'),
-(5, 'natsukisubaru073@gmail.com', '279174'),
-(6, 'natsukisubaru073@gmail.com', '279174'),
-(7, 'natsukisubaru073@gmail.com', '279174'),
-(8, 'natsukisubaru073@gmail.com', '279174'),
-(9, 'albiafabiansya@gmail.com', '13eb4d2071ef732f'),
-(10, 'natsukisubaru073@gmail.com', '279174'),
-(11, 'natsukisubaru073@gmail.com', '279174'),
-(12, 'natsukisubaru073@gmail.com', '279174'),
-(13, 'natsukisubaru073@gmail.com', '279174'),
-(14, 'natsukisubaru073@gmail.com', '279174'),
-(15, 'natsukisubaru073@gmail.com', '279174'),
-(16, 'natsukisubaru073@gmail.com', '279174'),
-(17, 'natsukisubaru073@gmail.com', '279174'),
-(18, 'albiafabiansya@gmail.com', 'e286442dee91'),
-(19, 'natsukisubaru073@gmail.com', '279174'),
-(20, 'albiafabiansya@gmail.com', '153975'),
-(21, 'natsukisubaru073@gmail.com', '279174'),
-(22, 'natsukisubaru073@gmail.com', '279174'),
-(23, 'natsukisubaru073@gmail.com', '279174'),
-(24, 'natsukisubaru073@gmail.com', '279174'),
-(25, 'natsukisubaru073@gmail.com', '279174'),
-(26, 'natsukisubaru073@gmail.com', '279174'),
-(27, 'natsukisubaru073@gmail.com', '279174'),
-(28, 'natsukisubaru073@gmail.com', '279174'),
-(29, 'natsukisubaru073@gmail.com', '279174'),
-(30, 'albiafabiansyah@gmail.com', '447950'),
-(31, 'natsukisubaru073@gmail.com', '279174'),
-(32, 'natsukisubaru073@gmail.com', '279174'),
-(33, 'natsukisubaru073@gmail.com', '279174'),
-(34, 'natsukisubaru073@gmail.com', '279174'),
-(35, 'natsukisubaru073@gmail.com', '279174'),
-(36, 'natsukisubaru073@gmail.com', '279174');
+(1, 'natsukisubaru073@gmail.com', '308395'),
+(2, 'albiafabiansya@gmail.com', '877853');
 
 -- --------------------------------------------------------
 
@@ -234,32 +175,6 @@ CREATE TABLE `ulasan_buku` (
   `rating` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `ulasan_buku`
---
-
-INSERT INTO `ulasan_buku` (`id`, `user`, `buku`, `ulasan`, `rating`, `created_at`) VALUES
-(33, 16, 18, 'aaaa', 3, '2024-02-10 00:25:41'),
-(34, 16, 18, 'aaaa', 4, '2024-02-10 00:25:53'),
-(35, 16, 18, 'xxxxx', 2, '2024-02-10 00:26:01'),
-(36, 16, 18, '1ads', 2, '2024-02-10 00:26:11'),
-(37, 16, 18, 'bling bang bang bling bang bang born', 3, '2024-02-10 00:27:58'),
-(38, 16, 19, 'jajja', 3, '2024-02-10 00:29:37'),
-(39, 16, 19, 'aoako', 5, '2024-02-10 00:29:44'),
-(40, 16, 19, 'aku mw', 5, '2024-02-10 00:29:50'),
-(41, 16, 19, 'kpn yh', 5, '2024-02-10 00:29:56'),
-(42, 16, 19, 'aksdoak', 3, '2024-02-10 00:30:08'),
-(43, 16, 20, 'adwad', 3, '2024-02-10 00:30:39'),
-(44, 16, 20, 'aefa', 2, '2024-02-10 00:30:47'),
-(45, 16, 20, 'afqfec', 1, '2024-02-10 00:30:53'),
-(46, 16, 20, 'caca', 1, '2024-02-10 00:30:58'),
-(47, 16, 20, 'APA APAAN INI', 1, '2024-02-10 00:31:09'),
-(48, 16, 21, 'adadw', 3, '2024-02-10 00:32:00'),
-(49, 16, 21, 'f422', 3, '2024-02-10 00:32:08'),
-(50, 16, 21, 'acacw', 2, '2024-02-10 00:32:14'),
-(51, 16, 21, 'acawc', 2, '2024-02-10 00:32:21'),
-(52, 16, 21, 'acaec', 2, '2024-02-10 00:32:27');
 
 -- --------------------------------------------------------
 
@@ -284,19 +199,12 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `perpus_id`, `username`, `password`, `email`, `nama_lengkap`, `alamat`, `role`, `created_at`) VALUES
-(1, 0, 'iweng', '$2a$12$lzrnN..vMjHnA0VCWa8yFuGT2MeAbulEZXQCKPF4KvF3zjlnC1rR.', 'ridwanbanjar1122@gmail.com', 'Ridwan', 'Pintusinga Banjar', 'admin', '2024-01-17 02:40:22'),
-(2, 1, 'adit', '$2y$10$tqyRF.LLf9VP7750L/VC4OhgwVKPEV2E5N59aXPYb4YR1ugaUqUrm', 'adit12@gmail.com', 'Raditya', 'Pintusinga Banjar', 'peminjam', '2024-01-17 03:31:10'),
-(3, 1, 'adam', '$2y$10$zmNTg3JeHtPOyt0Veb27qOytoW8tA7lGt3qbIUXlUtt/FRzxn7ZwG', 'adamsp12@gmail.com', 'Adam Suradi', 'Pintusinga Banjar', 'petugas', '2024-01-17 03:31:55'),
-(11, 1, 'test', '$2y$10$yezmqa/N4l82KeJRhPcFvOc1GIhtNsjB1iscC3hisU/TGCuHye4Hq', 'sdfdf@gmail.com', 'zahwan', 'waf', 'peminjam', '2024-01-17 03:07:04'),
-(13, 1, 'agus', '$2y$10$rM86ZqX5fR/OTgRwW20y9.aFoAfvelbTQK6PipYbxBCLYKrWt2iZ.', 'gusmet@gmail.com', 'Agus selamet', 'Banjar Kolot', 'petugas', '2024-01-17 10:13:46'),
-(15, 0, 'Yos', '$2a$12$2Udg8Y9tbLPXqAJ3bkChYuo6ZOaQzMfCU3tWxcKf69/hPe1XuZUaW', 'ezi22@gmail.com', 'Yos Sudarso', 'Sumedang', 'peminjam', '2024-02-03 06:25:35'),
-(16, 0, 'Ciel', '$2y$10$rxw54H2KW.tDp0OQ9UrRfuKuYhcARenAkcjkOHsvgxNHAH1Z6ZeKK', 'ciel@gmail.com', 'Ciel Dreia', 'Froia', 'admin', '2024-01-24 03:10:02'),
-(17, 0, 'zahwan', '$2y$10$PfNpLD7oNylhLNG8Nt.ZwOXyTe5owKiUpDgAYN9hFg3nYtSG7GL3G', 'skylake@gmail.com', 'Sidqi', 'Cikbar', 'petugas', '2024-01-25 01:59:54'),
-(18, 0, 'Vanth', '$2y$10$vP/SEQPmuRA7xSEXttyvE.6RMM946/.7zcow5d3CQSvO0z6QPo5Mm', 'vanth@gmail.com', 'Vanth', 'Bulan', 'petugas', '2024-01-25 02:00:27'),
-(19, 0, 'Higuruma', '$2y$10$ZpqNDWSfNTbasNtpN1JY6uZK6k7V6JOszraOxtv0lGzL.eVONibUC', 'higuu122@gmail.com', 'Higu', 'Shibuya', 'petugas', '2024-01-26 23:42:08'),
-(20, 0, 'Vriel', '$2y$10$VZrMSwQg5S8jtCgFvRIAieFHaxRkYmbFjvmxlJaSdYvT7ImgjaE4y', 'vrees@gmail.com', 'vrrrrrrrrrrrr', 'gtw', 'peminjam', '2024-02-04 06:04:09'),
-(21, 0, 'albia', '$2y$10$7ale0SCPRsRNMaWbn/erNO2jxcVSXAfqfDf6XQtelpKJWl15QMVcC', 'albiafabiansya@gmail.com', 'Albia Fabiansyah', 'Gang Bawang', 'peminjam', '2024-02-19 14:24:14'),
-(22, 0, 'subaru', '$2y$10$ljMqnUKDKYIuz32hhp1lF.vMDKXtigoG/gi5FjI4xp.a2lFrFEQ2S', 'natsukisubaru073@gmail.com', 'Natsuki Subaru', 'Isekai', 'peminjam', '2024-02-20 03:12:25');
+(1, 1, 'Albia', '$2y$10$2bimVnpPvlEsVbGAlZSc1e5lBO/ZAm0TwEeGQ3awxLNYGy5vohERC', 'albiafabiansya@gmail.com', 'Albia Fabiansyah', 'Banjar', 'admin', '2024-02-29 06:19:00'),
+(2, 0, 'Ezzi', '$2y$10$sb9DOI7ESa6oP9eUFrTPFuf.rnsDD70q2znU9j0VsJ/iQLTdCanAS', 'ezi22@gmail.com', 'Fahrezi', 'Sumedang', 'peminjam', '2024-02-21 02:59:53'),
+(3, 0, 'ilham ganteng', '$2y$10$YEvqSkR8ODwx9fg6U686qODq1SEn1UlpMd6mnJWdrt0fLSDvnoUEq', 'ciel@gmail.com', 'afgan', 'banjar', 'petugas', '2024-02-21 04:30:27'),
+(4, 0, 'MFPB', '$2y$10$DpEY3DHdiSCk5.jPjKxSo.cwOpxPrpT67fjeHczSth4RW19CL.GAW', 'rezzasukma@gmail.com', 'Fahreza', 'duka', 'peminjam', '2024-02-28 02:18:50'),
+(5, 0, 'ciel', '$2y$10$GmOUfO87x3mjMk.JJamstO2SnkDOe7Se83g8JcAYlKDe69uDim3Jy', 'natsukisubaru073@gmail.com', 'Ciel Dreia', 'Banjar', 'peminjam', '2024-03-04 02:24:55'),
+(6, 0, 'Vanth', '$2y$10$PmONc63XnRJ.TQiRewZ2lOwZjDtqLsxHuI5.Q7JHVmAPMeNM1.BRC', 'vanth@gmail.com', 'Vanth', 'aaaaa', 'petugas', '2024-03-04 03:55:41');
 
 --
 -- Indexes for dumped tables
@@ -306,12 +214,6 @@ INSERT INTO `user` (`id`, `perpus_id`, `username`, `password`, `email`, `nama_le
 -- Indexes for table `buku`
 --
 ALTER TABLE `buku`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `detail_peminjaman`
---
-ALTER TABLE `detail_peminjaman`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -364,31 +266,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `buku`
 --
 ALTER TABLE `buku`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
-
---
--- AUTO_INCREMENT for table `detail_peminjaman`
---
-ALTER TABLE `detail_peminjaman`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `kategori_buku`
 --
 ALTER TABLE `kategori_buku`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `koleksi_pribadi`
 --
 ALTER TABLE `koleksi_pribadi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `peminjaman`
 --
 ALTER TABLE `peminjaman`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `perpustakaan`
@@ -400,19 +296,19 @@ ALTER TABLE `perpustakaan`
 -- AUTO_INCREMENT for table `reset_password`
 --
 ALTER TABLE `reset_password`
-  MODIFY `id` int(22) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(22) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ulasan_buku`
 --
 ALTER TABLE `ulasan_buku`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

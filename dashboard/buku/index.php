@@ -334,6 +334,7 @@ $total_pages = ceil($total_books / $limit);
                     <h1 class="h3 mb-3 text-gray-800">Buku</h1>
                     <a href="tambah-buku.php" class="mb-4 btn btn-primary">Tambah Buku</a>
                     <a href="tambah-kategori.php" class="mb-4 btn btn-primary">Tambah Kategori</a>
+                    <a href="kategori.php" class="mb-4 btn btn-primary">Kategori</a>
                     <!-- Page Heading -->
 					
 						
@@ -516,7 +517,7 @@ $total_pages = ceil($total_books / $limit);
         });
     </script>
 
-</script>
+
 
 </body>
 

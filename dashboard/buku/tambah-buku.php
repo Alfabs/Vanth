@@ -358,9 +358,6 @@ if (mysqli_num_rows($result_kategori) > 0) {
             <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" required>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" id="judul" name="deskripsi" placeholder="Deskripsi" required>
-        </div>
-        <div class="form-group">
             <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Penulis" required>
         </div>
         <div class="form-group">
@@ -370,12 +367,15 @@ if (mysqli_num_rows($result_kategori) > 0) {
             <input type="text" class="form-control" id="tahun_terbit" name="tahun_terbit" placeholder="Tahun Terbit" required>
         </div>
         <div class="form-group">
-                    <label for="pdf">PDF File:</label>
-                    <div class="custom-file">
-                        <input id="pdf" name="pdf" accept="application/pdf" type="file" class="custom-file-input" id="inputGroupFile02" aria-describedby="inputGroupFileAddon02">
-                        <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
-                    </div>
-                </div>
+            <textarea type="text" class="form-control rounded" id="judul" name="deskripsi" placeholder="Deskripsi" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="pdf">PDF File:</label>
+            <div class="custom-file">
+                <input id="pdf" name="pdf" accept="application/pdf" type="file" class="custom-file-input" id="inputGroupFile02" aria-describedby="inputGroupFileAddon02" onchange="updateFileName(this)">
+                <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+            </div>
+        </div>
         <div class="form-group">
             <label for="kategori_id">Kategori:</label>
             <select class="form-control" id="kategori_id" name="kategori_id">

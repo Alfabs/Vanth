@@ -16,10 +16,16 @@ checkUserRole($userRole);
 $userId = getLoggedInUserID($conn, $username);
 
 // Query untuk mengambil data peminjaman berdasarkan user
-$peminjamanQuery = "SELECT buku.id, buku.kategori_id, buku.judul, buku.cover, buku.penulis, buku.penerbit, buku.tahun_terbit, peminjaman.tanggal_peminjaman, peminjaman.tanggal_pengembalian, peminjaman.status_peminjaman
-                    FROM peminjaman
-                    INNER JOIN buku ON peminjaman.buku = buku.id
-                    WHERE peminjaman.user = $userId AND peminjaman.status_peminjaman = 'Dipinjam'";
+$peminjamanQuery = "SELECT buku.id, buku.kategori_id, buku.judul, buku.deskripsi, buku.cover, buku.penulis, buku.penerbit, buku.tahun_terbit, 
+                           peminjaman.tanggal_peminjaman, peminjaman.tanggal_pengembalian, peminjaman.status_peminjaman, peminjaman.buku,
+                           COUNT(peminjaman.id) as jumlah_peminjaman
+                           FROM peminjaman
+                           INNER JOIN buku ON peminjaman.buku = buku.id
+                           WHERE peminjaman.user = $userId AND peminjaman.status_peminjaman = 'Dikembalikan'
+                           GROUP BY buku.id";
+// Eksekusi query
+$peminjamanResult = mysqli_query($conn, $peminjamanQuery);
+
 
 // Eksekusi query
 $peminjamanResult = mysqli_query($conn, $peminjamanQuery);
@@ -85,6 +91,20 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         <i class="fa fa-bars"></i>
                     </button>
 
+                    <!-- Filter Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Kategori
+                        </button>
+                        <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <button class="dropdown-item" onclick="filterBooks(null)">All</button>
+                            <?php while ($category = mysqli_fetch_assoc($categoryResult)) : ?>
+                                <button class="dropdown-item" onclick="filterBooks(<?php echo $category['id']; ?>)"><?php echo $category['nama_kategori']; ?></button>
+                            <?php endwhile; ?>
+                        </div>
+                    </div>
+
                     <!-- Topbar Search -->
                     <form 
                         class=" d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -136,7 +156,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION['username'];?></span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="../dashboard/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -174,40 +194,34 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
 
 
 
-                <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    
-                    <h1 style="margin-top: 90px;" class="h3 mb-4 text-gray-800 text-center">History Buku</h1>
-                    <div class="row justify-content-center">
-                        <div class=" mb-4">
-                            <button type="button" class="btn btn-primary" onclick="filterBooks(null)">All</button>
-                            <?php while ($category = mysqli_fetch_assoc($categoryResult)) : ?>
-                                <button type="button" class="btn btn-primary" onclick="filterBooks(<?php echo $category['id']; ?>)"><?php echo $category['nama_kategori']; ?></button>
-                            <?php endwhile; ?>
-                        </div>
-                    </div>
+                    <h1 style="margin-top: 90px;" class="h3 text-gray-800 text-center">History Buku</h1>
+
                     <div class="row justify-content-center">
                         <?php while ($row = mysqli_fetch_assoc($peminjamanResult)) : ?>
-                            <div class="searchable card mb-3" data-category-id="<?php echo $row['kategori_id']; ?>" style=" max-width: 800px;box-shadow: 0 4px 20px 0 rgba(0,0,0,0.4);">
-                                <div class="row no-gutters">
-                                    <div class="col-md-4">
-                                        <img src="../dashboard/buku/cover/<?= $row['cover'];?>" class="card-img" alt="...">
-                                    </div>
-                                    <div class="col-md-8">
-                                    <div class="card-body mt-5">
-                                        <h5 class="card-title font-weight-bold">Judul : <?=$row['judul'];?></h5>
-                                        <p class="card-text">Penulis : <?=$row['penulis'];?></p>
-                                        <p class="card-text">Tahun Terbit : <?=$row['tahun_terbit'];?></p>
-                                        <p class="card-text">Tanggal Peminjaman : <?=$row['tanggal_peminjaman'];?></p>
-                                        <p class="card-text">Tanggal Pengembalian : <?=$row['tanggal_pengembalian'];?></p>
-                                        <p class="card-text">Status Peminjaman : <?=$row['status_peminjaman'];?></p>
-                                    </div>
+                            <div class="col-md-8 mb-4"> <!-- Menambahkan kolom untuk membatasi lebar card dan memberikan margin bottom -->
+                                <div class="searchable card" data-category-id="<?php echo $row['kategori_id']; ?>" style="box-shadow: 0 4px 20px 0 rgba(0,0,0,0.4);">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            <img src="../dashboard/buku/cover/<?= $row['cover'];?>" class="card-img" alt="...">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body mt-4"> <!-- Mengurangi margin top -->
+                                                <h5 class="card-title font-weight-bold">Judul : <?=$row['judul'];?></h5>
+                                                <p class="card-text">Penulis : <?=$row['penulis'];?></p>
+                                                <p class="card-text">Tahun Terbit : <?=$row['tahun_terbit'];?></p>
+                                                <p class="card-text">Anda Meminjam buku ini sebanyak <?=$row['jumlah_peminjaman'];?> kali</p>
+                                                <p class="card-text">Deskripsi : <br><?=$row['deskripsi'];?></p>
+                                                <a href="detail_history.php?id=<?=$row['id'];?>" class="btn btn-outline-primary me-2">Detail</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         <?php endwhile; ?>
                     </div>
                 </div>
+
 
                     
                 </div>
@@ -220,14 +234,29 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
         </div>
         <!-- End of Content Wrapper -->
         <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2021</span>
+             <footer style="box-shadow: 0 -7px 17px 0 rgba(0,0,0,0.4);" class="mt-5 footer bg-light text-center py-4 border-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="font-weight-bold">Tentang Kami</h5>
+                            <p>Aplikasi perpustakaan digital ini adalah Aplikasi berbasis website 
+                                untuk membaca buku secara online dan menyimpan buku secara online</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5  class="font-weight-bold">Contact Us</h5>
+                            <p>Email: aivoice725@gmail.com<br>Phone: +1234567890</p>
+                        </div>
+                        <div class="col-md-4">
+                                <h5 class="font-weight-bold">Account</h5>
+                                <a data-toggle="modal" data-target="#logoutModal" href="../dashboard/logout.php" class="btn btn-outline-primary me-2">Logout</a>
+                        </div>   
+                    </div>
                 </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
+                <div class="container mt-3">
+                    <p>&copy; 2024 Your Website. All rights reserved.</p>
+                </div>
+            </footer>
+            <!-- End of Footer -->
 
     </div>
     <!-- End of Page Wrapper -->

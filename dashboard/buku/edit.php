@@ -380,10 +380,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" required value="<?php echo $book_data['judul']; ?>">
                 </div>
                 <div class="form-group">
-                    <label for="">Deskripsi :</label>
-                    <input type="text" class="form-control" id="judul" name="deskripsi" placeholder="Deskripsi" required value="<?php echo $book_data['deskripsi']; ?>">
-                </div>
-                <div class="form-group">
                     <label for="">Penulis :</label>
                     <input type="text" class="form-control" id="penulis" name="penulis" placeholder="Penulis" required value="<?php echo $book_data['penulis']; ?>">
                 </div>
@@ -392,9 +388,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" class="form-control" id="penerbit" name="penerbit" placeholder="Penerbit" required value="<?php echo $book_data['penerbit']; ?>">
                 </div>
                 <div class="form-group">
+                    <label for="">Deskripsi :</label>
+                    <textarea type="text" class="form-control rounded" id="judul" name="deskripsi" placeholder="Deskripsi" required><?php echo $book_data['deskripsi']; ?></textarea>
+                </div>
+                <div class="form-group">
                     <label for="pdf">PDF File:</label>
                     <div class="custom-file">
-                        <input id="pdf" name="pdf" accept="application/pdf" type="file" class="custom-file-input" id="inputGroupFile02" aria-describedby="inputGroupFileAddon02">
+                        <input id="pdf" name="pdf" accept="application/pdf" type="file" class="custom-file-input" id="inputGroupFile02" aria-describedby="inputGroupFileAddon02" onchange="updateFileName(this)">
                         <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
                     </div>
                 </div>
@@ -494,6 +494,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
+    <!-- Kategori Modal-->
+    <div class="modal fade" id="kategoriModal" tabindex="-1" role="dialog" aria-labelledby="kategoriModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="kategoriModalLabel">Daftar Kategori</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Tabel kategori akan ditampilkan di sini -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID Kategori</th>
+                                <th>Nama Kategori</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kategoriTableBody">
+                            <!-- Data kategori akan dimasukkan di sini melalui AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- Tombol-tombol tambahan jika diperlukan -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Bootstrap core JavaScript-->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -528,6 +563,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $("#cover").change(function () {
         readURL(this);
     });
+</script>
+
+<script>
+    function updateFileName(input) {
+        var fileName = input.files[0].name;
+        var label = input.nextElementSibling;
+        label.innerText = fileName;
+    }
 </script>
 
 </body>

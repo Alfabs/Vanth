@@ -83,14 +83,10 @@ $totalReviews = $rowTotalReviews['total'];
 $totalPages = ceil($totalReviews / $reviewsPerPage);
 
 // // Query to check if the user has borrowed the book
-// $query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$selectedBookId' AND status_peminjaman = 'Dipinjam'";
-// $result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
+$query_check_borrowed = "SELECT * FROM peminjaman WHERE user = '$userId' AND buku = '$selectedBookId' AND status_peminjaman = 'Dipinjam'";
+$result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
 
-// // If the user has not borrowed the book, redirect back to the index page
-// if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) {
-//     echo "<script>alert('Anda belum meminjam buku ini.'); window.location.href = 'index.php';</script>";
-//     exit();
-// }
+
 ?>
 
 <!DOCTYPE html>
@@ -139,6 +135,21 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
+                    
+                    <?php if (!$result_check_borrowed || mysqli_num_rows($result_check_borrowed) == 0) :?>
+                            <a href="index.php" class="btn-back" style="position: absolute; top: 10px; left: 10px; z-index: 999;">
+                                <span class="btn btn-primary btn-user btn-block">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span>
+                            </a>
+                        <?php else:?>
+                            <a href="ulasan.php?id=<?=$selectedBookId;?>" class="btn-back" style="position: absolute; top: 10px; left: 10px; z-index: 999;">
+                                <span class="btn btn-primary btn-user btn-block">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span>
+                            </a>
+                    <?php endif;?>
+
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -149,7 +160,7 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                                     <?= $_SESSION['username']; ?>
                                 </span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="../dashboard/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -172,7 +183,7 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
     <div class="container">
         <!-- Row for Book Details and Cover -->
         <div class="row justify-content-center ">
-            <div class="col-lg-3">
+            <div class="col-lg-4">
                 
                 <?php
                 // Fetch book details
@@ -183,7 +194,7 @@ $totalPages = ceil($totalReviews / $reviewsPerPage);
                     ?>
                     <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);" class="card mb-4">
                         <img src="../dashboard/buku/cover/<?php echo $rowBookDetails['cover']; ?>"
-                            class="card-img-top" style="width: 100%; height: 370px; object-fit: cover;" alt="Cover Buku">
+                            class="card-img-top" style="width: 100%; height: 410px; object-fit: cover;" alt="Cover Buku">
                         <div class="card-body ">
                             <h5 class="font-weight-bold card-title"><?php echo $rowBookDetails['judul']; ?></h5>
                             <p class="card-text">Deskripsi : <br> <?php echo $rowBookDetails['deskripsi']; ?></p>

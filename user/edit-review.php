@@ -99,6 +99,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                         <i class="fa fa-bars"></i>
                     </button>
 
+                    <a href="lihat-ulasan.php?id=<?=$selectedBookId;?>" class="btn-back">
+                        <span class="btn btn-primary btn-user btn-block">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    </a>
+
+
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Nav Item - User Information -->
@@ -108,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                                     <?= $_SESSION['username']; ?>
                                 </span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="../dashboard/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

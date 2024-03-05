@@ -168,7 +168,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION['username']; ?></span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="../dashboard/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -218,7 +218,7 @@ while ($row = mysqli_fetch_assoc($checkPeminjamanResult)) {
                             // Tentukan apakah tombol "Pinjam" atau "Kembalikan" yang harus ditampilkan
                             $buttonText = $isBorrowed ? 'Kembalikan' : 'Pinjam';
                             $buttonClass = $isBorrowed ? 'btn-danger' : 'btn-primary';?>
-                            <div class="col-lg-3 mb-4 searchable">
+                            <div style="margin-bottom: 300px;" class="col-lg-3 searchable">
                                 <div style="box-shadow: 0 4px 17px 0 rgba(0,0,0,0.4);"  class="card search-result">
                                     <img src="../dashboard/buku/cover/<?php echo $row['cover']; ?>"
                                         style="width: 100%; height: 410px; object-fit: cover;"
