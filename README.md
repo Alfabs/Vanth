@@ -25,7 +25,7 @@ Aplikasi Perpustakaan Digital ini adalah aplikasi perpustakaan digital berbasis 
 git clone https://github.com/Alfabs/Vanth.git
 ```
 
-2. Pastikan xampp atau client server sudah terdownload dan kunjungi [http/localhostphp](http://localhost/phpmyadmin/)http://localhost/phpmyadmin/ untuk xampp, bagi yang lainnya menyesuaikan. Jika ingin mendowload xampp https://www.apachefriends.org/download.html
+2. Pastikan xampp atau client server sudah terdownload dan kunjungi [http/localhostphp](http://localhost/phpmyadmin/)http://localhost/phpmyadmin/ untuk xampp, bagi yang lainnya menyesuaikan. Jika ingin mendownload xampp https://www.apachefriends.org/download.html
    
 3. Buat database "perpustakaan", lalu Import database `perpustakaan.sql` ke database yang sudah dibuat
    
@@ -41,4 +41,6 @@ git clone https://github.com/Alfabs/Vanth.git
 
 - Di direktori file `function/func.php` di bagian `function sendResetPasswordEmail()`, ada bagian code 
   `$mail->Username = ''` dan `$mail->Password = ''`, Username ini adalah gmail yang digunakan dan Password ini adalah aplikasi sandi atau apps password dari gmail.
+
+- Gunakan Versi PHP 8+ agar fitur Lupa Password berjalan
 
