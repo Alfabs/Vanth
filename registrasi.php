@@ -1,9 +1,12 @@
 <?php
-// Pastikan file konfigurasi database sudah di-include di sini
-
 // File konfigurasi database (ganti sesuai konfigurasi Anda)
 include 'config.php';
 include 'function/func.php';
+
+if (isset($_SESSION['username'])) {
+    header("Location: user/index.php"); // Redirect ke halaman login jika belum login
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ambil data yang dikirimkan dari form
@@ -32,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Query untuk memasukkan data user baru ke dalam database
                 $register_query = "INSERT INTO `user` (`perpus_id`, `username`, `password`, `email`, `nama_lengkap`, `alamat`, `role`, `created_at`)
-                              VALUES ('$perpus_id', '$username', '$password', '$email', '$nama_lengkap', '$alamat', '$role', current_timestamp())";
+                                   VALUES ('$perpus_id', '$username', '$password', '$email', '$nama_lengkap', '$alamat', '$role', current_timestamp())";
 
                 $register_result = mysqli_query($conn, $register_query);
 
@@ -156,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <hr>
                                 </form>
                                 <div class="text-center">
-                                    <a class="small" href="login.php">Already have an account? Login!</a>
+                                    <a class="small" href="login.php">Sudah punya akun? Login!</a>
                                 </div>
                             </div>
                         </div>

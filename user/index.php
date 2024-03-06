@@ -262,6 +262,9 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         <?php if ($isBorrowed) : ?>
                                             <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
                                         <?php endif; ?>
+                                        <?php if ($isBorrowed) : ?>
+                                            <a href="baca.php?id=<?= $row['id']; ?>" class="btn btn-success">Baca</a>
+                                        <?php endif; ?>
                                         <!-- Tombol Bookmark -->
                                         <?php
                                         // Cek apakah buku sudah ada di koleksi pribadi user
@@ -327,7 +330,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                         <a href="ulasan.php?id=<?= $row['id']; ?>" class="btn btn-success">Ulasan</a>
                                     <?php endif; ?>
                                     <?php if ($isBorrowed) : ?>
-                                        <a target="_blank" href="baca.php?id=<?= $row['id']; ?>" class="btn btn-success">Baca</a>
+                                        <a href="baca.php?id=<?= $row['id']; ?>" class="btn btn-success">Baca</a>
                                     <?php endif; ?>
                                     <!-- Tombol Bookmark -->
                                     <?php

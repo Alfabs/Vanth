@@ -124,7 +124,7 @@ dataBuku($userRole);
                 </a>
             </li>
 
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="peminjaman/laporan.php">
                     <i class="fas fa-print"></i>
                     <span>Laporan</span>
@@ -190,7 +190,7 @@ dataBuku($userRole);
                 </a>
             </li>
 
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="peminjaman/laporan.php">
                     <i class="fas fa-print"></i>
                     <span>Laporan</span>

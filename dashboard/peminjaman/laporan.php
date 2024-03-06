@@ -103,13 +103,13 @@ $total_pages = ceil($total_peminjaman / $limit);
             <li class="nav-item">
                 <a class="nav-link" href="../buku/">
                     <i class="fas fa-fw fa-book"></i>
-                    <span>Pendataan Barang/Buku</span>
+                    <span>Pendataan Buku</span>
                 </a>
             </li>
 
             <!-- Nav Item - Peminjaman -->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-handshake"></i>
                     <span>Peminjaman</span>
                 </a>
@@ -273,7 +273,7 @@ $total_pages = ceil($total_peminjaman / $limit);
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                                     <?= $_SESSION['username']; ?>
                                 </span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

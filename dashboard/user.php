@@ -13,6 +13,7 @@ if (!isset($_SESSION['username'])) {
 // Fetch user role from the database based on the username in the session
 $username = $_SESSION['username'];
 $userRole = getUserRole($conn, $username);
+checkAdminRole($userRole);
 
 // Pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -313,6 +314,11 @@ $total_pages = ceil($total_users / $limit);
                         </div>
                     </div>
                 </form>
+                <?php if(isset($_SESSION['success'])) { ;?>
+                            <div class="col-lg-3 alert alert-success" role="alert"><?=$_SESSION['success'];?></div>
+                            <?php   
+                                unset($_SESSION['success']);
+                            } ;?>
 
 
         <!-- Table to display users -->
@@ -325,6 +331,7 @@ $total_pages = ceil($total_users / $limit);
                     <th scope="col">Nama Lengkap</th>
                     <th scope="col">Alamat</th>
                     <th scope="col">Role</th>
+                    <th scope="col">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -336,6 +343,7 @@ $total_pages = ceil($total_users / $limit);
                         <td><?= $row['nama_lengkap']; ?></td>
                         <td><?= $row['alamat']; ?></td>
                         <td><?= $row['role']; ?></td>
+                        <td><a style="cursor: pointer;" data-user-id="<?= $row['id'];?>" class="delete-review-btn badge badge-danger">Delete</a></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
@@ -418,6 +426,32 @@ $total_pages = ceil($total_users / $limit);
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+    <script>
+        // Ketika tombol hapus diklik
+        $('.delete-review-btn').click(function() {
+            // Dapatkan ID ulasan yang akan dihapus
+
+            let userId = $(this).data('user-id');
+
+            // Tampilkan konfirmasi SweetAlert
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "User akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                // Jika pengguna menekan tombol Ya, hapus
+                if (result.isConfirmed) {
+                    // Redirect to delete_review.php with the review ID as parameter
+                    window.location.href = 'hapus.php?id=' + userId;
+                }
+            });
+        });
+    </script>
 
 
 </script>

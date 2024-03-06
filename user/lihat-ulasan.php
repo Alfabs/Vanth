@@ -165,6 +165,22 @@ $result_check_borrowed = mysqli_query($conn, $query_check_borrowed);
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="index.php">
+                                    <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Home
+                                </a>
+                                <a class="dropdown-item" href="peminjaman.php">
+                                    <i class="fas fa-handshake fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Peminjaman
+                                </a>
+                                <a class="dropdown-item" href="bookmark.php">
+                                    <i class="far fa-solid fa-heart fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Bookmark
+                                </a>
+                                <a class="dropdown-item" href="history.php">
+                                    <i class="fas fa-history fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    History
+                                </a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout

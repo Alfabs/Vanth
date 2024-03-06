@@ -210,7 +210,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                                 <h5 class="card-title font-weight-bold">Judul : <?=$row['judul'];?></h5>
                                                 <p class="card-text">Penulis : <?=$row['penulis'];?></p>
                                                 <p class="card-text">Tahun Terbit : <?=$row['tahun_terbit'];?></p>
-                                                <p class="card-text">Anda Meminjam buku ini sebanyak <?=$row['jumlah_peminjaman'];?> kali</p>
+                                                <p class="card-text">Anda Pernah Meminjam buku ini sebanyak <?=$row['jumlah_peminjaman'];?> kali</p>
                                                 <p class="card-text">Deskripsi : <br><?=$row['deskripsi'];?></p>
                                                 <a href="detail_history.php?id=<?=$row['id'];?>" class="btn btn-outline-primary me-2">Detail</a>
                                             </div>

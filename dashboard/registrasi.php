@@ -25,31 +25,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $role = htmlspecialchars($_POST["role"]); // Tambahkan baris ini untuk mengambil data role
 
     // Lakukan validasi dan pendaftaran
-    if (!empty($username) && !empty($email) && !empty($password) && !empty($nama_lengkap) && !empty($alamat) && !empty($role)) {
-        // Query untuk memeriksa apakah email sudah terdaftar
-        $check_email_query = "SELECT * FROM `user` WHERE `email` = '$email'";
-        $check_email_result = mysqli_query($conn, $check_email_query);
+    if (!empty($username) && !empty($email) && !empty($password) && !empty($nama_lengkap) && !empty($alamat)) {
+        // Query untuk memeriksa apakah username sudah terdaftar
+        $check_username_query = "SELECT * FROM `user` WHERE `username` = '$username'";
+        $check_username_result = mysqli_query($conn, $check_username_query);
 
-        if (mysqli_num_rows($check_email_result) == 0) {
-            // Jika email belum terdaftar, lakukan pendaftaran
-            $perpus_id = 0; // Sesuai dengan logika Anda
+        if (mysqli_num_rows($check_username_result) == 0) {
+            // Jika username belum terdaftar, lanjutkan dengan pendaftaran
+            // Query untuk memeriksa apakah email sudah terdaftar
+            $check_email_query = "SELECT * FROM `user` WHERE `email` = '$email'";
+            $check_email_result = mysqli_query($conn, $check_email_query);
 
-            // Query untuk memasukkan data user baru ke dalam database
-            $register_query = "INSERT INTO `user` (`perpus_id`, `username`, `password`, `email`, `nama_lengkap`, `alamat`, `role`, `created_at`)
-                              VALUES ('$perpus_id', '$username', '$password', '$email', '$nama_lengkap', '$alamat', '$role', current_timestamp())";
+            if (mysqli_num_rows($check_email_result) == 0) {
+                // Jika email belum terdaftar, lakukan pendaftaran
+                $perpus_id = 1; // Sesuai dengan logika Anda
 
-            $register_result = mysqli_query($conn, $register_query);
+                // Query untuk memasukkan data user baru ke dalam database
+                $register_query = "INSERT INTO `user` (`perpus_id`, `username`, `password`, `email`, `nama_lengkap`, `alamat`, `role`, `created_at`)
+                                   VALUES ('$perpus_id', '$username', '$password', '$email', '$nama_lengkap', '$alamat', '$role', current_timestamp())";
 
-            if ($register_result) {
-                // Pendaftaran berhasil
-                $success_message = "Registrasi berhasil. Silakan login.";
+                $register_result = mysqli_query($conn, $register_query);
+
+                if ($register_result) {
+                    // Pendaftaran berhasil
+                    $success_message = "Registrasi berhasil. Silakan login.";
+                } else {
+                    // Terdapat kesalahan saat query
+                    $error_message = "Terjadi kesalahan. Silakan coba lagi.";
+                }
             } else {
-                // Terdapat kesalahan saat query
-                $error_message = "Terjadi kesalahan. Silakan coba lagi.";
+                // Email sudah terdaftar
+                $error_message = "Email sudah terdaftar. Silakan gunakan email lain.";
             }
         } else {
-            // Email sudah terdaftar
-            $error_message = "Email sudah terdaftar. Silakan gunakan email lain.";
+            // Username sudah terdaftar
+            $error_message = "Username sudah terdaftar. Silakan gunakan username lain.";
         }
     } else {
         // Form tidak lengkap

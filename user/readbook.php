@@ -1,6 +1,4 @@
 <?php
-
-
 include '../function/func.php';
 include '../config.php';
 
@@ -12,9 +10,6 @@ if (!isset($_SESSION['username'])) {
 
 // Fetch user role from the database based on the username in the session
 $username = $_SESSION['username'];
-
-
-
 
 ?>
 
@@ -61,6 +56,12 @@ $username = $_SESSION['username'];
     border: none;
     cursor: pointer;
     font-size: 20px;
+}
+
+.page-zoom-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .page-navigation {
@@ -135,6 +136,22 @@ $username = $_SESSION['username'];
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="index.php">
+                                    <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Home
+                                </a>
+                                <a class="dropdown-item" href="peminjaman.php">
+                                    <i class="fas fa-handshake fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Peminjaman
+                                </a>
+                                <a class="dropdown-item" href="bookmark.php">
+                                    <i class="far fa-solid fa-heart fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Bookmark
+                                </a>
+                                <a class="dropdown-item" href="history.php">
+                                    <i class="fas fa-history fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    History
+                                </a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
@@ -149,9 +166,14 @@ $username = $_SESSION['username'];
                 <!-- Begin Page Content -->
                 
                 <div class="container">
-                    
+                    <!-- Tambahkan tombol zoom in dan zoom out -->
+                    <div class="page-zoom-controls">
+                        <button id="zoom-in" class="page-navigation-button"><i class="fas fa-search-plus"></i></button>
+                        <button id="zoom-out" class="page-navigation-button"><i class="fas fa-search-minus"></i></button>
+                    </div>
+
+                    <!-- Modifikasi container PDF -->
                     <div class="pdf-container-wrapper">
-                        
                         <button id="prev-page" class="page-navigation-button"><i class="fas fa-chevron-left"></i></button>
                         <div class="text-center" id="pdf-container"></div>
                         <button id="next-page" class="page-navigation-button"><i class="fas fa-chevron-right"></i></button>
@@ -228,6 +250,7 @@ $username = $_SESSION['username'];
         // Global variables
         let pdf = null;
         let currentPage = 1;
+        let currentScale = 1;
 
         // Fetch PDF document
         pdfjsLib.getDocument(pdfUrl, options).promise.then(pdfDocument => {
@@ -235,13 +258,29 @@ $username = $_SESSION['username'];
             displayPage(currentPage);
         });
 
-        // Function to display a specific page
+        // Function to adjust scale for rendering PDF page
+        function adjustScale(newScale) {
+            currentScale = newScale;
+            displayPage(currentPage);
+        }
+
+        // Event listener for zoom in button
+        document.getElementById("zoom-in").addEventListener("click", function () {
+            adjustScale(currentScale + 0.1); // Adjust zoom increment as needed
+        });
+
+        // Event listener for zoom out button
+        document.getElementById("zoom-out").addEventListener("click", function () {
+            adjustScale(currentScale - 0.1); // Adjust zoom decrement as needed
+        });
+
+        // Function to display a specific page with adjusted scale
         function displayPage(pageNumber) {
             pdf.getPage(pageNumber).then(page => {
                 // Set up the canvas
                 const canvas = document.createElement("canvas");
                 const context = canvas.getContext("2d");
-                const viewport = page.getViewport({ scale: 1 }); // Adjust scale here if needed
+                const viewport = page.getViewport({ scale: currentScale });
 
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
@@ -250,6 +289,7 @@ $username = $_SESSION['username'];
                 const renderContext = {
                     canvasContext: context,
                     viewport: viewport
+                    
                 };
                 page.render(renderContext);
 

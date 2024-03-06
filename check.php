@@ -162,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox small">    
-                                            <a href="registrasi.php" class="" for="customCheck">Daftar akun peminjam?</a>
+                                            <a href="registrasi.php" class="" for="customCheck">Belum punya akun? Daftar</a>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
