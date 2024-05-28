@@ -1,6 +1,6 @@
 # Aplikasi Perpustakaan Digital
 
-Aplikasi Perpustakaan Digital ini adalah aplikasi perpustakaan digital berbasis website untuk mengelola buku buku perpustakaan secara online menggunakan php native.
+Aplikasi Perpustakaan Digital ini adalah aplikasi perpustakaan digital berbasis website untuk mengelola buku buku perpustakaan secara online menggunakan php native dan membaca buku secara online.
 
 ## Fitur
 
